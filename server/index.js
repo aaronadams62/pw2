@@ -6,9 +6,30 @@ const bcrypt = require('bcrypt');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const morgan = require('morgan');
+const winston = require('winston');
+
+// Winston logger — writes to console and logs/ directory
+const logger = winston.createLogger({
+    level: process.env.LOG_LEVEL || 'info',
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.printf(({ timestamp, level, message }) => `${timestamp} [${level.toUpperCase()}] ${message}`)
+    ),
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: path.join(__dirname, 'logs', 'error.log'), level: 'error' }),
+        new winston.transports.File({ filename: path.join(__dirname, 'logs', 'combined.log') }),
+    ],
+});
+
+// Ensure logs directory exists
+const logsDir = path.join(__dirname, 'logs');
+if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
 
 // #24 — Require JWT_SECRET at startup. Refuse to run without it.
 if (!process.env.JWT_SECRET) {
+    // Use console.error here since logger isn't set up yet
     console.error('FATAL: JWT_SECRET environment variable is not set. Refusing to start.');
     process.exit(1);
 }
@@ -32,6 +53,11 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+// Morgan HTTP request logging — streams into Winston
+app.use(morgan('combined', {
+    stream: { write: (message) => logger.info(message.trim()) }
+}));
 
 // Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -80,7 +106,7 @@ const initDB = async () => {
     while (retries) {
         try {
             await pool.query('SELECT NOW()');
-            console.log("Database Connected!");
+            logger.info('Database connected.');
 
             // Create Projects Table
             await pool.query(`
@@ -112,15 +138,15 @@ const initDB = async () => {
                 if (userCheck.rows.length === 0) {
                     const hashedPassword = await bcrypt.hash(adminPassword, 12);
                     await pool.query("INSERT INTO users (username, password_hash) VALUES ($1, $2)", [adminUsername, hashedPassword]);
-                    console.log(`Admin user "${adminUsername}" created from environment variables.`);
+                    logger.info(`Admin user "${adminUsername}" created from environment variables.`);
                 }
             } else {
-                console.warn('WARN: ADMIN_USERNAME or ADMIN_PASSWORD not set — skipping admin seed. Create an admin manually if needed.');
+                logger.warn('ADMIN_USERNAME or ADMIN_PASSWORD not set — skipping admin seed.');
             }
 
             break;
         } catch (err) {
-            console.log("Database not ready, retrying...", retries);
+            logger.warn(`Database not ready, retrying... (${retries} attempts left)`);
             retries -= 1;
             await new Promise(res => setTimeout(res, 5000));
         }
@@ -139,7 +165,7 @@ app.get('/api/projects', async (req, res) => {
         // Let's just return clean JSON, we will update frontend to match this simpler API
         res.json({ data: result.rows });
     } catch (err) {
-        console.error(err);
+        logger.error(err.message);
         res.status(500).json({ error: 'Server bad' });
     }
 });
@@ -157,7 +183,7 @@ app.post('/api/login', async (req, res) => {
         const token = jwt.sign({ id: user.rows[0].id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ token });
     } catch (err) {
-        console.error(err);
+        logger.error(err.message);
         res.status(500).json({ error: "Login failed" });
     }
 });
@@ -185,7 +211,7 @@ app.post('/api/projects', authenticateToken, async (req, res) => {
         );
         res.json(newProject.rows[0]);
     } catch (err) {
-        console.error(err);
+        logger.error(err.message);
         res.status(500).json({ error: "Failed to create project" });
     }
 });
@@ -196,7 +222,7 @@ app.delete('/api/projects/:id', authenticateToken, async (req, res) => {
         await pool.query("DELETE FROM projects WHERE id = $1", [req.params.id]);
         res.json({ success: true });
     } catch (err) {
-        console.error(err);
+        logger.error(err.message);
         res.status(500).json({ error: "Failed to delete" });
     }
 });
@@ -211,7 +237,7 @@ app.put('/api/projects/:id', authenticateToken, async (req, res) => {
         );
         res.json(updated.rows[0]);
     } catch (err) {
-        console.error(err);
+        logger.error(err.message);
         res.status(500).json({ error: "Failed to update project" });
     }
 });
@@ -229,5 +255,5 @@ app.post('/api/upload', authenticateToken, upload.single('image'), (req, res) =>
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    logger.info(`Server running on port ${PORT}`);
 });

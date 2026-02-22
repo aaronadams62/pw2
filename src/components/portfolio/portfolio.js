@@ -58,7 +58,7 @@ function Portfolio() {
 
               return (
                 <div className="portfolio__item" key={id}>
-                  <img src={displayImage} alt={title} className="portfolio__item-image" />
+                  <img src={displayImage} alt={title} className="portfolio__item-image" loading="lazy" />
                   <h3 className="portfolio__item-title">{title}</h3>
                   <p className="portfolio__item-description">{description}</p>
                   {live_url && (
