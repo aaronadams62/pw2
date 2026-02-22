@@ -17,7 +17,7 @@ function AdminDashboard() {
     const [uploading, setUploading] = useState(false);
     const navigate = useNavigate();
 
-    const token = localStorage.getItem('adminToken');
+    const token = sessionStorage.getItem('adminToken');
 
     useEffect(() => {
         if (!token) {
@@ -29,16 +29,24 @@ function AdminDashboard() {
 
     const fetchProjects = async () => {
         const res = await fetch(`${API_URL}/api/projects`);
+        if (!res.ok) {
+            console.error('Failed to fetch projects:', res.status);
+            return;
+        }
         const data = await res.json();
         setProjects(data.data || []);
     };
 
     const handleDelete = async (id) => {
         if (!window.confirm("Delete this project?")) return;
-        await fetch(`${API_URL}/api/projects/${id}`, {
+        const res = await fetch(`${API_URL}/api/projects/${id}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
+        if (!res.ok) {
+            alert(`Delete failed: ${res.status} ${res.statusText}`);
+            return;
+        }
         fetchProjects();
     };
 
@@ -71,7 +79,7 @@ function AdminDashboard() {
         e.preventDefault();
 
         if (editingProject) {
-            await fetch(`${API_URL}/api/projects/${editingProject.id}`, {
+            const res = await fetch(`${API_URL}/api/projects/${editingProject.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -79,9 +87,13 @@ function AdminDashboard() {
                 },
                 body: JSON.stringify(formData)
             });
+            if (!res.ok) {
+                alert(`Update failed: ${res.status} ${res.statusText}`);
+                return;
+            }
             setEditingProject(null);
         } else {
-            await fetch(`${API_URL}/api/projects`, {
+            const res = await fetch(`${API_URL}/api/projects`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -89,6 +101,10 @@ function AdminDashboard() {
                 },
                 body: JSON.stringify(formData)
             });
+            if (!res.ok) {
+                alert(`Create failed: ${res.status} ${res.statusText}`);
+                return;
+            }
         }
 
         setFormData({ title: '', description: '', image_url: '', live_url: '', category: 'web' });
@@ -115,7 +131,7 @@ function AdminDashboard() {
         <div className="admin-dashboard">
             <div className="dashboard-header">
                 <h1>Manage Projects</h1>
-                <button onClick={() => { localStorage.removeItem('adminToken'); navigate('/'); }}>Logout</button>
+                <button onClick={() => { sessionStorage.removeItem('adminToken'); navigate('/'); }}>Logout</button>
             </div>
 
             <div className="admin-grid">

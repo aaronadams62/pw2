@@ -24,7 +24,7 @@ function AdminLogin() {
             }
 
             const data = await response.json();
-            localStorage.setItem('adminToken', data.token);
+            sessionStorage.setItem('adminToken', data.token);
             navigate('/admin/dashboard');
         } catch (err) {
             setError('Invalid username or password');

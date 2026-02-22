@@ -87,9 +87,9 @@ Transform the static React portfolio into a dynamic, professional-grade applicat
 ### 🟡 Medium
 | # | Item | Location | Description |
 |---|------|----------|-------------|
-| 5 | **Suspicious Dependency `"-": "^0.0.1"`** | `package.json:6` | Likely accidental entry; potential supply-chain risk/noise. |
-| 6 | **Admin Token in localStorage** | `AdminLogin.js:25`, `AdminDashboard.js:18,116` | JWT stored in `localStorage` is vulnerable to XSS-based token theft. |
-| 7 | **No `response.ok` Check in Admin CRUD** | `AdminDashboard.js:36,72,82` | Failed API calls silently look like success. |
+| ~~5~~ | ~~**Suspicious Dependency `"-": "^0.0.1"`**~~ | ~~`package.json:6`~~ | ✅ **Fixed #27** — Removed from `package.json`, `npm install` run to clean `package-lock.json`. Site confirmed working via Playwright. |
+| ~~6~~ | ~~**Admin Token in localStorage**~~ | ~~`AdminLogin.js:25`, `AdminDashboard.js:18,116`~~ | ✅ **Fixed #28** — Migrated from `localStorage` to `sessionStorage` in `AdminLogin.js` and `AdminDashboard.js`. Playwright confirmed token in sessionStorage, absent from localStorage. |
+| ~~7~~ | ~~**No `response.ok` Check in Admin CRUD**~~ | ~~`AdminDashboard.js:36,72,82`~~ | ✅ **Fixed #29** — Added `response.ok` guards to `fetchProjects`, `handleDelete`, `handleSubmit` (PUT and POST). Failures now surface status codes to the user. Playwright confirmed add project works end-to-end. |
 
 ### 🔵 Low
 | # | Item | Location | Description |
