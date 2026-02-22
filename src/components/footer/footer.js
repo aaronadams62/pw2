@@ -6,7 +6,7 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer__content">
-        <p>&copy; 2023 AaronAdams.dev. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} AaronAdams.dev. All rights reserved.</p>
         <div className="footer__socials">
           <a href="https://github.com/aaronadams62" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
             <i className="fab fa-github" aria-hidden="true"></i>
