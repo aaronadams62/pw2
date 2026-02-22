@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './admin.css';
 
-const API_URL = process.env.REACT_APP_API_URL || '${API_URL}';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
 
 function AdminDashboard() {
     const [projects, setProjects] = useState([]);
@@ -28,7 +28,7 @@ function AdminDashboard() {
     }, [token, navigate]);
 
     const fetchProjects = async () => {
-        const res = await fetch('${API_URL}/api/projects');
+        const res = await fetch(`${API_URL}/api/projects`);
         const data = await res.json();
         setProjects(data.data || []);
     };
@@ -51,7 +51,7 @@ function AdminDashboard() {
         formDataUpload.append('image', file);
 
         try {
-            const res = await fetch('${API_URL}/api/upload', {
+            const res = await fetch(`${API_URL}/api/upload`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` },
                 body: formDataUpload
@@ -81,7 +81,7 @@ function AdminDashboard() {
             });
             setEditingProject(null);
         } else {
-            await fetch('${API_URL}/api/projects', {
+            await fetch(`${API_URL}/api/projects`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
