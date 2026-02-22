@@ -114,7 +114,7 @@ Transform the static React portfolio into a dynamic, professional-grade applicat
 | 8 | **Create Separate Navigation Paths** | One path for technical buyers ("Need a builder"), one for business owners ("Need growth results") |
 | 9 | **Add Authority-Compounding Content** | Publish short teardown posts: "How I increased conversion on X," "How I built Y architecture." |
 | 10 | **Improve Conversion Tracking** | Track scroll depth, CTA clicks, contact submissions, and case-study engagement to optimize the funnel |
-| 11 | **Tighten Performance & Accessibility** | Fast load, optimized images, strong mobile UX, accessibility compliance — reinforces engineering credibility |
+| ~~11~~ | ~~**Tighten Performance & Accessibility**~~ | ✅ **Fixed #43** — Added `aria-label` + `aria-hidden` to footer social icon links; added `loading="lazy"` to portfolio card images. Contact form labels already properly associated. Header hamburger and theme toggle already had `aria-label`. |
 | 12 | **Polish Brand Consistency** | Consistent typography, voice, color system, and visual hierarchy so the site feels premium and intentional |
 
 ---
@@ -167,7 +167,7 @@ pwv2/
 
 | # | Item | Description |
 |---|------|-------------|
-| 1 | **CI/CD Pipeline** | GitHub Actions to auto-run tests and deploy on push — replace all manual steps |
+| ~~1~~ | ~~**CI/CD Pipeline**~~ | ✅ **Fixed #50** — `.github/workflows/ci.yml` created. Runs `npm ci`, `npm test`, and `npm run build` on every push/PR to master/main. |
 | 2 | **Analytics** | Add GA4 or privacy-first alternative (Plausible/Fathom) to track visitors, clicks, and conversions |
 | ~~3~~ | ~~**SEO Essentials**~~ | ✅ **Fixed #52** — `sitemap.xml` created, `robots.txt` updated with Sitemap reference and `/admin` disallow. JSON-LD Person + WebSite schema added to `public/index.html`. Meta/OG/Twitter already present. |
 | 4 | **Error Monitoring** | Sentry (or similar) on both frontend and backend to catch and alert on runtime errors |
@@ -176,7 +176,7 @@ pwv2/
 | 7 | **Database Backups** | Automated PostgreSQL backup schedule with offsite storage and a tested restore process |
 | ~~8~~ | ~~**Environment Docs (.env.example)**~~ | ✅ **Fixed #57** — `.env.example` was already complete with all required vars documented. |
 | ~~9~~ | ~~**Custom Error Pages**~~ | ✅ **Fixed #58** — Created `NotFound.js` (404) and `ErrorBoundary.js` (500) in `src/components/errors/`. Added `*` catch-all route in `App.js`. Playwright confirmed `/this-does-not-exist` renders the 404 page. |
-| 10 | **Server-Side Logging** | Request logging on the Express backend (Morgan + Winston) for debugging production issues |
+| ~~10~~ | ~~**Server-Side Logging**~~ | ✅ **Fixed #59** — Added `morgan` (HTTP request logging) and `winston` (structured app logging) to `server/`. Morgan streams into Winston. Logs written to `server/logs/combined.log` and `server/logs/error.log`. `server/logs/` gitignored. |
 
 ---
 

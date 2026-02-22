@@ -30,3 +30,6 @@ yarn-error.log*
 # Server dependencies
 server/node_modules/
 server/package-lock.json
+
+# Server logs
+server/logs/

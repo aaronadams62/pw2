@@ -8,11 +8,11 @@ function Footer() {
       <div className="footer__content">
         <p>&copy; 2023 AaronAdams.dev. All rights reserved.</p>
         <div className="footer__socials">
-          <a href="https://github.com/aaronadams62" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-github"></i>
+          <a href="https://github.com/aaronadams62" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+            <i className="fab fa-github" aria-hidden="true"></i>
           </a>
-          <a href="https://linkedin.com/in/aaronadams62" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-linkedin"></i>
+          <a href="https://linkedin.com/in/aaronadams62" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+            <i className="fab fa-linkedin" aria-hidden="true"></i>
           </a>
         </div>
       </div>
