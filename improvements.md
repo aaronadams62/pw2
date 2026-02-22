@@ -38,6 +38,7 @@ Transform the static React portfolio into a dynamic, professional-grade applicat
 | **Remove Hardcoded Admin Credentials** (#23) | Auto-seed removed from `server/index.js`. Credentials now env-var only. Commit `56574c8`. |
 | **Fix JWT Secret Fallback** (#24) | Startup guard added; `\|\| 'secret'` fallbacks removed from `server/index.js`. Commit `56574c8`. |
 | **Restrict CORS Origins** (#25) | `ALLOWED_ORIGINS` env var replaces open `cors()`. Verified with curl tests. Commit `ec4ec11`. |
+| **Replace Hardcoded API URLs** (#26) | All `http://localhost:4000` fetch calls replaced with `API_URL` constant from `REACT_APP_API_URL` env var across `portfolio.js`, `AdminLogin.js`, `AdminDashboard.js`. Verified via Playwright network requests. |
 
 ### 🔄 IN PROGRESS
 | Item | Description |
@@ -81,7 +82,7 @@ Transform the static React portfolio into a dynamic, professional-grade applicat
 | # | Item | Location | Description |
 |---|------|----------|-------------|
 | ~~3~~ | ~~**CORS Fully Open**~~ | ~~`server/index.js:11`~~ | ✅ **Fixed in #25** — CORS now restricted to allowlisted origins via `ALLOWED_ORIGINS` env var. Committed `ec4ec11`, pushed to `master`, GitHub issue closed. |
-| 4 | **Hardcoded localhost:4000 URLs** | `portfolio.js:23`, `AdminLogin.js:14`, `AdminDashboard.js:29,36,52,72,82`, `server/index.js:197` | All API URLs hardcoded to `http://localhost:4000`. Should be environment-driven via `REACT_APP_API_URL`. |
+| ~~4~~ | ~~**Hardcoded localhost:4000 URLs**~~ | ~~`portfolio.js:23`, `AdminLogin.js:14`, `AdminDashboard.js:29,36,52,72,82`~~ | ✅ **Fixed #26** — All fetch calls now use `API_URL` constant driven by `REACT_APP_API_URL` env var. Verified via Playwright network inspection. |
 
 ### 🟡 Medium
 | # | Item | Location | Description |
