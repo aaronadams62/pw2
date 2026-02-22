@@ -1,0 +1,198 @@
+> [!IMPORTANT]
+> **🤖 AI AGENT — READ THIS FIRST**
+> Before doing anything in this project, you **must** read [`foundation.md`](./foundation.md).
+> It defines the required workflow, priority rules, testing process, and human escalation protocol.
+> Do not pick up an issue or write any code until you have read and understood `foundation.md`.
+
+---
+
+# Product Requirements Document (PRD): Portfolio V3 Upgrade
+
+## 1. Executive Summary
+Transform the static React portfolio into a dynamic, professional-grade application with an Admin Dashboard for content management and modern Docker-based infrastructure.
+
+---
+
+## 2. Progress Status
+
+### ✅ COMPLETED
+| Item | Description |
+|------|-------------|
+| Docker Infrastructure | `docker-compose.yml` with Frontend, Backend API, and PostgreSQL |
+| Custom Backend | Node.js Express API with JWT authentication |
+| Database Schema | PostgreSQL with `projects` and `users` tables |
+| Admin Portal | Login, Dashboard with Add/Delete, Premium dark styling |
+| Contact Form | `mailto:` with pre-filled subject + recipient |
+| Portfolio API | Dynamic content from `localhost:4000/api/projects` |
+| Routing | `react-router-dom` for `/admin` routes |
+| **UI Redesign - Complete** | Premium dark theme for ALL sections |
+| Header | Glassmorphism sticky nav |
+| Hero | Gradient backgrounds, CTA buttons |
+| About | Two-column layout with highlight cards |
+| Portfolio | Modern card grid with hover effects |
+| Skills | Tag-based display with hover animations |
+| Contact | Premium form styling |
+| Footer | Social icons + Admin link |
+| **Light/Dark Theme Toggle** | Full theme switching with CSS variables |
+
+### 🔄 IN PROGRESS
+| Item | Description |
+|------|-------------|
+| **Fill Out All Sections** | Go through and fill in all the sections for the website |
+| **Resume Link** | Have resume pop up in another web link; also available for download |
+| **Finish Other Projects** | Finish other projects and add them to the website |
+
+### ⏳ TODO
+| Item | Description |
+|------|-------------|
+| **Migrate to Next.js** | Convert the React app to Next.js for SSR, file-based routing, image optimization, and better SEO |
+| **Confirm Localhost Setup** | Verify Docker, backend API, and frontend all start correctly and communicate as expected locally |
+| **Full Site Content Audit** | Review every section of the site and make sure all content, links, projects, skills, and info are current and accurate |
+| **Update Full Stack Engineer Resume** | Replace resume on the site with the most recent version; ensure it opens in a new tab and is available for download |
+| **Full Security Suite Check (Post-Launch)** | Run a comprehensive security audit across frontend, backend, infrastructure, and dependencies after all other work is complete |
+| ~~Admin - Edit Project~~ | ✅ Allow editing existing projects |
+| ~~Admin - Image Upload~~ | ✅ Upload thumbnails with preview |
+| **Cloudflare Tunnel** | Configure for public access ← NEXT |
+| ~~Mobile Responsiveness~~ | ✅ Full responsive audit complete |
+| **About Me - Resume Update** | Go through About Me section and add most recent updated resume |
+| **Portfolio - Live Code Button** | Add a button on each portfolio card to show the live code |
+| **Test Files** | Build out test files for each section |
+| **Domain Update** | Update the domain aaronadams.dev with updated pw2 code |
+| **Fix Existing Sites** | Quickly update e-commerce site, camper rental site, and Austin's realtor website |
+| **Project Videos** | Add videos describing each project — breaking down components and functionality |
+
+---
+
+## 3. Security Findings (Audit)
+
+> Findings from static analysis — prioritized highest severity first.
+
+### 🔴 Critical
+| # | Item | Location | Description |
+|---|------|----------|-------------|
+| 1 | **Predictable Admin Credentials** | `server/index.js:77,78,89,90` | Server auto-seeds `admin/password123` if missing. Trivial to compromise in any non-local environment. |
+| 2 | **Hardcoded JWT Secret Fallback** | `server/index.js:129,143` | JWT signs/verifies with `'secret'` if `JWT_SECRET` env var is unset. Tokens can be forged by anyone who knows the fallback. |
+
+### 🟠 High
+| # | Item | Location | Description |
+|---|------|----------|-------------|
+| 3 | **CORS Fully Open** | `server/index.js:11` | `app.use(cors())` allows any origin. Combined with token-based admin APIs, this widens the attack surface. |
+| 4 | **Hardcoded localhost:4000 URLs** | `portfolio.js:23`, `AdminLogin.js:14`, `AdminDashboard.js:29,36,52,72,82`, `server/index.js:197` | All API URLs hardcoded to `http://localhost:4000`. Should be environment-driven via `REACT_APP_API_URL`. |
+
+### 🟡 Medium
+| # | Item | Location | Description |
+|---|------|----------|-------------|
+| 5 | **Suspicious Dependency `"-": "^0.0.1"`** | `package.json:6` | Likely accidental entry; potential supply-chain risk/noise. |
+| 6 | **Admin Token in localStorage** | `AdminLogin.js:25`, `AdminDashboard.js:18,116` | JWT stored in `localStorage` is vulnerable to XSS-based token theft. |
+| 7 | **No `response.ok` Check in Admin CRUD** | `AdminDashboard.js:36,72,82` | Failed API calls silently look like success. |
+
+### 🔵 Low
+| # | Item | Location | Description |
+|---|------|----------|-------------|
+| 8 | **Stale Test Suite** | `src/App.test.js:4,6` | Test still expects `"learn react"` which no longer exists in the UI. |
+| 9 | **Mojibake / Encoding Artifacts** | `about.js:24,25,26,43,64`, `hero.js:8` | Garbled characters visible in rendered UI strings. |
+| 10 | **Unused Import Lint Warning** | `footer.js:4` | Unused `FontAwesomeIcon` import confirmed in build output. |
+
+---
+
+## 4. Website Improvements (Positioning & Conversion)
+
+| # | Item | Description |
+|---|------|-------------|
+| 1 | **Clarify Positioning Above the Fold** | Use one sharp value prop: "I build full-stack products that increase conversion and revenue." |
+| 2 | **Replace Cards with Case Studies** | Each project shows: Problem, Stack/architecture decisions, Marketing strategy (funnel, channel, messaging), Measured results (conversion lift, CAC drop, CTR, speed improvements) |
+| 3 | **Add Business Metrics to Every Project** | Show numbers, not adjectives. Example: "+38% lead conversion in 6 weeks." |
+| 4 | **Show Technical Depth — Engineering Notes** | Per project: system design diagram, API/data model, tradeoffs made, performance/security improvements |
+| 5 | **Show Marketing Depth — Growth Notes** | Per project: ICP/persona, offer and CTA strategy, landing page experiments, attribution/analytics setup |
+| 6 | **Improve Trust Signals** | Add client logos, testimonials with real names/titles, links to live projects, GitHub repos |
+| 7 | **Upgrade CTA Flow** | Primary CTA sitewide: "Book a strategy + build consult." Secondary CTA: "View case studies." |
+| 8 | **Create Separate Navigation Paths** | One path for technical buyers ("Need a builder"), one for business owners ("Need growth results") |
+| 9 | **Add Authority-Compounding Content** | Publish short teardown posts: "How I increased conversion on X," "How I built Y architecture." |
+| 10 | **Improve Conversion Tracking** | Track scroll depth, CTA clicks, contact submissions, and case-study engagement to optimize the funnel |
+| 11 | **Tighten Performance & Accessibility** | Fast load, optimized images, strong mobile UX, accessibility compliance — reinforces engineering credibility |
+| 12 | **Polish Brand Consistency** | Consistent typography, voice, color system, and visual hierarchy so the site feels premium and intentional |
+
+---
+
+## 5. Codebase Reorganization
+
+> Restructure the project to reflect professional full-stack engineer standards — clean separation of concerns, proper asset management, and a scalable folder layout.
+
+### Current Issues
+| Problem | Detail |
+|---------|--------|
+| Empty `backend/` folder | Exists alongside `server/` — one should be removed |
+| Entire backend in one file | `server/index.js` contains routes, middleware, auth, DB — needs splitting |
+| Assets buried in `src/photos/` | Images and resume PDF mixed together with no organization |
+| `src/components/MyComponent` | Generic leftover component still in codebase |
+| No `services/` layer | API calls hardcoded inside components instead of a central service file |
+| No `hooks/`, `context/`, or `utils/` | Missing standard React architecture layers |
+| `bash.exe.stackdump` at root | Crash dump file committed to the project root |
+
+### Target Structure
+```
+pwv2/
+├── client/  (or src/ for Next.js app router)
+│   ├── components/
+│   │   ├── layout/         # Header, Footer, Nav
+│   │   ├── sections/       # Hero, About, Skills, Portfolio, Contact
+│   │   └── admin/          # Admin login, dashboard
+│   ├── hooks/              # Custom React hooks (useProjects, useTheme, etc.)
+│   ├── context/            # ThemeContext, AuthContext
+│   ├── services/           # api.js — all fetch calls in one place
+│   ├── utils/              # Helper functions
+│   └── assets/
+│       ├── images/         # Profile, hero, project screenshots
+│       └── documents/      # resume.pdf
+├── server/
+│   ├── routes/             # projects.js, auth.js
+│   ├── controllers/        # projectController.js, authController.js
+│   ├── middleware/         # authMiddleware.js, logger.js
+│   ├── config/             # db.js, env.js
+│   └── index.js            # Entry point only (wires everything together)
+├── docker-compose.yml
+├── .env.example
+└── improvements.md
+```
+
+---
+
+## 6. Production Readiness Gaps
+
+
+| # | Item | Description |
+|---|------|-------------|
+| 1 | **CI/CD Pipeline** | GitHub Actions to auto-run tests and deploy on push — replace all manual steps |
+| 2 | **Analytics** | Add GA4 or privacy-first alternative (Plausible/Fathom) to track visitors, clicks, and conversions |
+| 3 | **SEO Essentials** | Meta tags, Open Graph, Twitter Cards, sitemap.xml, robots.txt, and JSON-LD structured data |
+| 4 | **Error Monitoring** | Sentry (or similar) on both frontend and backend to catch and alert on runtime errors |
+| 5 | **Uptime Monitoring** | UptimeRobot or Better Uptime to alert immediately when the site goes down |
+| 6 | **Contact Form Real Backend** | Replace `mailto:` with a real email delivery service (Resend, SendGrid, or Nodemailer) |
+| 7 | **Database Backups** | Automated PostgreSQL backup schedule with offsite storage and a tested restore process |
+| 8 | **Environment Docs (.env.example)** | Document all required environment variables in a `.env.example` file committed to the repo |
+| 9 | **Custom Error Pages** | Custom 404 and 500 pages so users never hit a blank screen on broken routes |
+| 10 | **Server-Side Logging** | Request logging on the Express backend (Morgan + Winston) for debugging production issues |
+
+---
+
+## 7. Development Commands
+
+```powershell
+# Start Local Dev
+docker-compose up -d postgres
+cd server && node index.js
+npm start
+```
+
+### Default Admin: set via `ADMIN_USERNAME` and `ADMIN_PASSWORD` in `.env` (no hardcoded credentials)
+
+---
+
+## 8. API Reference
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/projects` | No | Fetch all projects |
+| POST | `/api/projects` | JWT | Create project |
+| DELETE | `/api/projects/:id` | JWT | Delete project |
+| POST | `/api/login` | No | Login |
