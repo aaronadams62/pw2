@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/header/header';
 import Hero from './components/hero/hero';
 import About from './components/about/about';
@@ -7,26 +8,24 @@ import Skills from './components/skills/skills';
 import Testimonials from './components/testimonials/testimonials';
 import Contact from './components/contact/contact';
 import Footer from './components/footer/footer';
+import AdminLogin from './components/admin/AdminLogin';
+import AdminDashboard from './components/admin/AdminDashboard';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import './App.css';
+
 library.add(fab);
 
-function App() {
-  const [theme, setTheme] = useState('day');
-
-  const toggleTheme = () => {
-    setTheme(theme === 'day' ? 'night' : 'day');
-  };
+function MainSite() {
+  const [theme, setTheme] = useState('night');
+  const toggleTheme = () => setTheme(theme === 'night' ? 'day' : 'night');
 
   return (
     <div className="AaronFolio2.0" data-theme={theme}>
-      <Header />
-      <button onClick={toggleTheme} style={{ position: 'absolute', top: 10, right: 10 }}>
-        Toggle Night Mode
-      </button>
+      {/* Passing theme props to Header, will need to update Header to use them if we want the toggle there */}
+      <Header theme={theme} toggleTheme={toggleTheme} />
       <Hero />
       <About />
       <Portfolio />
@@ -35,6 +34,18 @@ function App() {
       <Contact />
       <Footer />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<MainSite />} />
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      </Routes>
+    </Router>
   );
 }
 

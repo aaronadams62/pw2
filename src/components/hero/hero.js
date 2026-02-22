@@ -1,17 +1,24 @@
 import React from 'react';
 import './hero.css';
-import heroImage from '../../photos/316277469_8341619385880243_91567643978802218_n.jpg';
 
 function Hero() {
   return (
     <section id="hero" className="hero">
-      <div className="hero__image">
-        <img src={heroImage} alt="Hero" />
-      </div>
       <div className="hero__content">
-        <h1 className="hero__title">Hi, I'm Aaron Adams</h1>
-        <p className="hero__description">Greetings, Earthlings! I'm a full-stack web developer, on a mission to create digital wonders that are so user-friendly, even your grandma could use them (sorry, grandma). With a knack for clean coding and a love for making people smile, I'm excited to bring some humor and fun into the world of web development. Let's work together and build something awesome! </p>
+        <span className="hero__eyebrow">✦ Full-Stack Developer & Marketing Strategist</span>
+        <h1 className="hero__title">
+          Building <span>Digital Experiences</span> That Drive Results
+        </h1>
+        <p className="hero__description">
+          I'm Aaron Adams — a developer who combines clean code with strategic thinking.
+          I create intuitive web applications and marketing solutions that help businesses grow.
+        </p>
+        <div className="hero__buttons">
+          <a href="#portfolio" className="btn btn-primary">View My Work</a>
+          <a href="#contact" className="btn btn-secondary">Get In Touch</a>
+        </div>
       </div>
+      <div className="hero__scroll">Scroll</div>
     </section>
   );
 }

@@ -1,47 +1,24 @@
 import React, { useState } from 'react';
 import './contact.css';
-import emailjs from 'emailjs-com';
 
 function Contact() {
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('Marketing');
   const [message, setMessage] = useState('');
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [showErrorMessage, setShowErrorMessage] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    emailjs.send(
-      'service_jsabwf8',
-      'template_4mguruv',
-      {
-        name,
-        email,
-        message,
-      },
-      '0Rq78dzAOptShc-9J'
-    )
-      .then(
-        (result) => {
-          setShowSuccessMessage(true);
-          setName('');
-          setEmail('');
-          setMessage('');
-        },
-        (error) => {
-          setShowErrorMessage(true);
-          console.log(error);
-        }
-      );
+    const mailtoLink = `mailto:aaronadams62@outlook.com?subject=${encodeURIComponent(`Portfolio Inquiry - ${subject}`)}&body=${encodeURIComponent(`Name: ${name}\n\nMessage: ${message}`)}`;
+    window.location.href = mailtoLink;
   };
 
   return (
     <section id="contact" className="contact">
       <div className="contact__content">
         <h2 className="contact__title">Contact Me</h2>
-        {showSuccessMessage && <p className="contact__success-message">Thank you for your message! We will be in touch soon.</p>}
-        {showErrorMessage && <p className="contact__error-message">Error sending your message. Please try again later.</p>}
+        <p className="contact__intro">
+          Interested in working together? Select a topic and send me an email directly.
+        </p>
         <form className="contact__form" onSubmit={handleSubmit}>
           <div className="contact__form-group">
             <label htmlFor="name">Name</label>
@@ -55,15 +32,19 @@ function Contact() {
             />
           </div>
           <div className="contact__form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+            <label htmlFor="subject">Interested In</label>
+            <select
+              name="subject"
+              id="subject"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
               required
-            />
+              className="contact__select"
+            >
+              <option value="Marketing">Marketing Strategy</option>
+              <option value="Web Development">Web Development</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
           <div className="contact__form-group">
             <label htmlFor="message">Message</label>
@@ -76,7 +57,7 @@ function Contact() {
             ></textarea>
           </div>
           <button type="submit" className="contact__form-submit">
-            Send Message
+            Open Email Client
           </button>
         </form>
       </div>
