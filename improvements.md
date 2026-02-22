@@ -169,13 +169,13 @@ pwv2/
 |---|------|-------------|
 | 1 | **CI/CD Pipeline** | GitHub Actions to auto-run tests and deploy on push — replace all manual steps |
 | 2 | **Analytics** | Add GA4 or privacy-first alternative (Plausible/Fathom) to track visitors, clicks, and conversions |
-| 3 | **SEO Essentials** | Meta tags, Open Graph, Twitter Cards, sitemap.xml, robots.txt, and JSON-LD structured data |
+| ~~3~~ | ~~**SEO Essentials**~~ | ✅ **Fixed #52** — `sitemap.xml` created, `robots.txt` updated with Sitemap reference and `/admin` disallow. JSON-LD Person + WebSite schema added to `public/index.html`. Meta/OG/Twitter already present. |
 | 4 | **Error Monitoring** | Sentry (or similar) on both frontend and backend to catch and alert on runtime errors |
 | 5 | **Uptime Monitoring** | UptimeRobot or Better Uptime to alert immediately when the site goes down |
 | 6 | **Contact Form Real Backend** | Replace `mailto:` with a real email delivery service (Resend, SendGrid, or Nodemailer) |
 | 7 | **Database Backups** | Automated PostgreSQL backup schedule with offsite storage and a tested restore process |
-| 8 | **Environment Docs (.env.example)** | Document all required environment variables in a `.env.example` file committed to the repo |
-| 9 | **Custom Error Pages** | Custom 404 and 500 pages so users never hit a blank screen on broken routes |
+| ~~8~~ | ~~**Environment Docs (.env.example)**~~ | ✅ **Fixed #57** — `.env.example` was already complete with all required vars documented. |
+| ~~9~~ | ~~**Custom Error Pages**~~ | ✅ **Fixed #58** — Created `NotFound.js` (404) and `ErrorBoundary.js` (500) in `src/components/errors/`. Added `*` catch-all route in `App.js`. Playwright confirmed `/this-does-not-exist` renders the 404 page. |
 | 10 | **Server-Side Logging** | Request logging on the Express backend (Morgan + Winston) for debugging production issues |
 
 ---

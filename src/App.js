@@ -10,6 +10,8 @@ import Contact from './components/contact/contact';
 import Footer from './components/footer/footer';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminDashboard from './components/admin/AdminDashboard';
+import NotFound from './components/errors/NotFound';
+import ErrorBoundary from './components/errors/ErrorBoundary';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -39,13 +41,16 @@ function MainSite() {
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<MainSite />} />
-        <Route path="/admin" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      </Routes>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <Routes>
+          <Route path="/" element={<MainSite />} />
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Router>
+    </ErrorBoundary>
   );
 }
 
