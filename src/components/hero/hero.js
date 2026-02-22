@@ -1,6 +1,12 @@
 import React from 'react';
 import './hero.css';
 
+const track = (eventName, params) => {
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', eventName, params);
+  }
+};
+
 function Hero() {
   return (
     <section id="hero" className="hero">
@@ -14,8 +20,8 @@ function Hero() {
           I create intuitive web applications and marketing solutions that help businesses grow.
         </p>
         <div className="hero__buttons">
-          <a href="#portfolio" className="btn btn-primary">View My Work</a>
-          <a href="#contact" className="btn btn-secondary">Get In Touch</a>
+          <a href="#portfolio" className="btn btn-primary" onClick={() => track('cta_click', { cta: 'view_my_work', section: 'hero' })}>View My Work</a>
+          <a href="#contact" className="btn btn-secondary" onClick={() => track('cta_click', { cta: 'get_in_touch', section: 'hero' })}>Get In Touch</a>
         </div>
       </div>
       <div className="hero__scroll">Scroll</div>

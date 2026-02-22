@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/header/header';
 import Hero from './components/hero/hero';
@@ -40,6 +40,20 @@ function MainSite() {
 }
 
 function App() {
+  useEffect(() => {
+    const id = process.env.REACT_APP_GA_MEASUREMENT_ID;
+    if (!id) return;
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+    document.head.appendChild(script);
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', id);
+  }, []);
+
   return (
     <ErrorBoundary>
       <Router>

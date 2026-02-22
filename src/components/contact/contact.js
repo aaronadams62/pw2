@@ -8,6 +8,9 @@ function Contact() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'contact_submit', { subject });
+    }
     const mailtoLink = `mailto:aaronadams62@outlook.com?subject=${encodeURIComponent(`Portfolio Inquiry - ${subject}`)}&body=${encodeURIComponent(`Name: ${name}\n\nMessage: ${message}`)}`;
     window.location.href = mailtoLink;
   };

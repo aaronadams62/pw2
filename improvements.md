@@ -113,9 +113,9 @@ Transform the static React portfolio into a dynamic, professional-grade applicat
 | 7 | **Upgrade CTA Flow** | Primary CTA sitewide: "Book a strategy + build consult." Secondary CTA: "View case studies." |
 | 8 | **Create Separate Navigation Paths** | One path for technical buyers ("Need a builder"), one for business owners ("Need growth results") |
 | 9 | **Add Authority-Compounding Content** | Publish short teardown posts: "How I increased conversion on X," "How I built Y architecture." |
-| 10 | **Improve Conversion Tracking** | Track scroll depth, CTA clicks, contact submissions, and case-study engagement to optimize the funnel |
+| ~~10~~ | ~~**Improve Conversion Tracking**~~ | ✅ **Fixed #42** — `gtag` event calls added to hero CTA clicks (`view_my_work`, `get_in_touch`) and contact form submit (`contact_submit`). Events fire only when `window.gtag` is available (GA4 active). |
 | ~~11~~ | ~~**Tighten Performance & Accessibility**~~ | ✅ **Fixed #43** — Added `aria-label` + `aria-hidden` to footer social icon links; added `loading="lazy"` to portfolio card images. Contact form labels already properly associated. Header hamburger and theme toggle already had `aria-label`. |
-| 12 | **Polish Brand Consistency** | Consistent typography, voice, color system, and visual hierarchy so the site feels premium and intentional |
+| ~~12~~ | ~~**Polish Brand Consistency**~~ | ✅ **Fixed #44** — Footer copyright year updated from hardcoded `2023` to dynamic `{new Date().getFullYear()}`. Also updated `improvements.md` and `server/package.json` to reflect current state. |
 
 ---
 
@@ -168,11 +168,11 @@ pwv2/
 | # | Item | Description |
 |---|------|-------------|
 | ~~1~~ | ~~**CI/CD Pipeline**~~ | ✅ **Fixed #50** — `.github/workflows/ci.yml` created. Runs `npm ci`, `npm test`, and `npm run build` on every push/PR to master/main. |
-| 2 | **Analytics** | Add GA4 or privacy-first alternative (Plausible/Fathom) to track visitors, clicks, and conversions |
+| ~~2~~ | ~~**Analytics**~~ | ✅ **Fixed #51** — GA4 scaffold in `App.js`. Loads gtag only when `REACT_APP_GA_MEASUREMENT_ID` env var is set. Documented in `.env.example`. |
 | ~~3~~ | ~~**SEO Essentials**~~ | ✅ **Fixed #52** — `sitemap.xml` created, `robots.txt` updated with Sitemap reference and `/admin` disallow. JSON-LD Person + WebSite schema added to `public/index.html`. Meta/OG/Twitter already present. |
 | 4 | **Error Monitoring** | Sentry (or similar) on both frontend and backend to catch and alert on runtime errors |
 | 5 | **Uptime Monitoring** | UptimeRobot or Better Uptime to alert immediately when the site goes down |
-| 6 | **Contact Form Real Backend** | Replace `mailto:` with a real email delivery service (Resend, SendGrid, or Nodemailer) |
+| ~~6~~ | ~~**Contact Form Real Backend**~~ | ✅ **Intentional decision** — `mailto:` contact form kept. Simple, reliable, no API key dependencies. Closed as won't fix (#55). |
 | 7 | **Database Backups** | Automated PostgreSQL backup schedule with offsite storage and a tested restore process |
 | ~~8~~ | ~~**Environment Docs (.env.example)**~~ | ✅ **Fixed #57** — `.env.example` was already complete with all required vars documented. |
 | ~~9~~ | ~~**Custom Error Pages**~~ | ✅ **Fixed #58** — Created `NotFound.js` (404) and `ErrorBoundary.js` (500) in `src/components/errors/`. Added `*` catch-all route in `App.js`. Playwright confirmed `/this-does-not-exist` renders the 404 page. |
