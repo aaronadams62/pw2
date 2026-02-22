@@ -1,143 +1,230 @@
+/* ===========================================
+   ABOUT - Premium Section (Revised)
+   =========================================== */
+
 .about {
-  padding: 50px 0;
-  background-color: #fff;
+  padding: 100px 24px;
+  background: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle background accent */
+.about::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -200px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .about__content {
-  max-width: 960px;
+  max-width: var(--container-max);
   margin: 0 auto;
-  text-align: center;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 60px;
+  align-items: start;
 }
 
-.about__title {
-  font-size: 2rem;
-  margin-bottom: 20px;
+/* ========== Image Side ========== */
+.about__image-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.about__image-glow {
+  position: absolute;
+  inset: -20px;
+  background: var(--accent-gradient);
+  border-radius: 28px;
+  opacity: 0.3;
+  filter: blur(30px);
+  z-index: 0;
 }
 
 .about__image {
-  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+  width: 280px;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 20px;
+  border: 2px solid var(--border-subtle);
+  box-shadow: var(--shadow-lg);
 }
 
-.about__image img {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  object-fit: cover;
+/* ========== Text Side ========== */
+.about__text {
+  text-align: left;
+}
+
+.about__title {
+  font-size: clamp(2rem, 5vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .about__description {
-  font-size: 1.2rem;
-  color: #666;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+/* ========== Highlight Cards ========== */
+.about__highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 28px 0;
+}
+
+.about__highlight-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  transition: all var(--transition-fast);
+}
+
+.about__highlight-card:hover {
+  border-color: var(--border-accent);
+  transform: translateX(4px);
+}
+
+.about__highlight-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.about__highlight-card strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.about__highlight-card p {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin: 0;
   line-height: 1.5;
 }
 
+/* ========== Resume Button ========== */
 .about__resume-link {
-  display: inline-block;
-  margin-top: 20px;
-  background-color: #333;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 5px;
-  text-decoration: none;
-  transition: background-color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  margin-top: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: var(--accent-gradient);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px var(--accent-glow);
+  transition: all var(--transition-base);
 }
 
 .about__resume-link:hover {
-  background-color: #666;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--accent-glow);
 }
 
+/* ========== Popup ========== */
 .about__popup {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2000;
 }
 
 .about__popup-content {
-  background-color: #fff;
-  border-radius: 5px;
-  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 40px;
   text-align: center;
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+  max-width: 400px;
+  animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .about__popup-message {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-bottom: 24px;
 }
 
 .about__popup-close {
-  display: block;
-  margin-top: 20px;
-  padding: 10px 20px;
-  border-radius: 30px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #fff;
-  background-color: #333;
-  text-decoration: none;
-  transition: background-color 0.3s ease-in-out;
+  padding: 12px 32px;
+  background: var(--accent-gradient);
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
 }
 
 .about__popup-close:hover {
-  background-color: #db1818;
+  transform: scale(1.02);
 }
 
-.about__point {
-  margin-bottom: 1rem;
-}
+/* ========== Responsive ========== */
+@media (max-width: 900px) {
+  .about__content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
 
-/* Night mode styles */
-/* Night mode styles */
+  .about__text {
+    text-align: center;
+  }
 
-[data-theme="night"] {
-  background-color: #222;
-  color: #f0f0f0;
-}
+  .about__image-wrapper {
+    justify-content: center;
+  }
 
-[data-theme="night"] a {
-  color: #f0f0f0;
-}
+  .about__image {
+    width: 220px;
+    height: 260px;
+  }
 
-[data-theme="night"] .header,
-[data-theme="night"] .hero,
-[data-theme="night"] .about,
-[data-theme="night"] .portfolio,
-[data-theme="night"] .skills,
-[data-theme="night"] .testimonials,
-[data-theme="night"] .contact,
-[data-theme="night"] .footer {
-  background-color: #222;
-}
-
-[data-theme="night"] .header__nav-link,
-[data-theme="night"] .about__resume-link,
-[data-theme="night"] .about__popup-close,
-[data-theme="night"] .portfolio__card-title,
-[data-theme="night"] .skills__title,
-[data-theme="night"] .testimonials__title,
-[data-theme="night"] .contact__title,
-[data-theme="night"] .footer__text {
-  color: #f0f0f0;
-}
-
-[data-theme="night"] .about__description,
-[data-theme="night"] .portfolio__card-description,
-[data-theme="night"] .skills__description,
-[data-theme="night"] .testimonials__description,
-[data-theme="night"] .contact__description {
-  color: #e0e0e0;
-}
-
-[data-theme="night"] .about__popup-content {
-  background-color: #222;
-  color: #f0f0f0;
-}
-[data-theme="night"] .portfolio__title {
-  color: #f0f0f0;
+  .about__highlight-card {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
 }

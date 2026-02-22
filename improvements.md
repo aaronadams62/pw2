@@ -94,9 +94,9 @@ Transform the static React portfolio into a dynamic, professional-grade applicat
 ### 🔵 Low
 | # | Item | Location | Description |
 |---|------|----------|-------------|
-| 8 | **Stale Test Suite** | `src/App.test.js:4,6` | Test still expects `"learn react"` which no longer exists in the UI. |
-| 9 | **Mojibake / Encoding Artifacts** | `about.js:24,25,26,43,64`, `hero.js:8` | Garbled characters visible in rendered UI strings. |
-| 10 | **Unused Import Lint Warning** | `footer.js:4` | Unused `FontAwesomeIcon` import confirmed in build output. |
+| ~~8~~ | ~~**Stale Test Suite**~~ | ~~`src/App.test.js:4,6`~~ | ✅ **Fixed #30** — Updated test to assert hero heading `"Building Digital Experiences That Drive Results"`. Playwright confirmed heading exists in live UI. |
+| ~~9~~ | ~~**Mojibake / Encoding Artifacts**~~ | ~~`about.js:24,25,26,43,64`, `hero.js:8`~~ | ✅ **Fixed #31** — Playwright confirmed all text renders cleanly; encoding artifacts were resolved during the UI redesign. No source changes needed. |
+| ~~10~~ | ~~**Unused Import Lint Warning**~~ | ~~`footer.js:4`~~ | ✅ **Fixed #32** — Removed unused `FontAwesomeIcon` import from `footer.js`. Footer renders correctly (CSS class-based icons unaffected). |
 
 ---
 
