@@ -1,13 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import App from './App';
 
 test('renders the portfolio site hero heading', () => {
-  render(
-    <MemoryRouter>
-      <App />
-    </MemoryRouter>
-  );
-  const heading = screen.getByText(/Building Digital Experiences That Drive Results/i);
+  render(<App />);
+  const heading = screen.getByRole('heading', { level: 1, name: /Digital Experiences/i });
   expect(heading).toBeInTheDocument();
 });

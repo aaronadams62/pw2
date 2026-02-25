@@ -50,7 +50,7 @@ Transform the static React portfolio into a dynamic, professional-grade applicat
 ### ⏳ TODO
 | Item | Description |
 |------|-------------|
-| **Migrate to Next.js** | Convert the React app to Next.js for SSR, file-based routing, image optimization, and better SEO |
+| **Migrate to Next.js** | Deferred behind Firebase Spark migration epic [#76](https://github.com/aaronadams62/pw2/issues/76); reassess after cutover based on SSR/SEO needs. |
 | **Confirm Localhost Setup** | Verify Docker, backend API, and frontend all start correctly and communicate as expected locally |
 | **Full Site Content Audit** | Review every section of the site and make sure all content, links, projects, skills, and info are current and accurate |
 | **Update Full Stack Engineer Resume** | Replace resume on the site with the most recent version; ensure it opens in a new tab and is available for download |
@@ -95,7 +95,7 @@ Transform the static React portfolio into a dynamic, professional-grade applicat
 | # | Item | Location | Description |
 |---|------|----------|-------------|
 | ~~8~~ | ~~**Stale Test Suite**~~ | ~~`src/App.test.js:4,6`~~ | ✅ **Fixed #30** — Updated test to assert hero heading `"Building Digital Experiences That Drive Results"`. Playwright confirmed heading exists in live UI. |
-| ~~9~~ | ~~**Mojibake / Encoding Artifacts**~~ | ~~`about.js:24,25,26,43,64`, `hero.js:8`~~ | ✅ **Fixed #31** — Playwright confirmed all text renders cleanly; encoding artifacts were resolved during the UI redesign. No source changes needed. |
+| ~~9~~ | ~~**Mojibake / Encoding Artifacts (Initial Pass)**~~ | ~~`about.js:24,25,26,43,64`, `hero.js:8`~~ | ✅ **Fixed #31** — Initial affected locations were resolved in the UI redesign. Remaining artifacts are tracked in [#72](https://github.com/aaronadams62/pw2/issues/72). |
 | ~~10~~ | ~~**Unused Import Lint Warning**~~ | ~~`footer.js:4`~~ | ✅ **Fixed #32** — Removed unused `FontAwesomeIcon` import from `footer.js`. Footer renders correctly (CSS class-based icons unaffected). |
 
 ---
@@ -173,7 +173,7 @@ pwv2/
 | 4 | **Error Monitoring** | Sentry (or similar) on both frontend and backend to catch and alert on runtime errors |
 | 5 | **Uptime Monitoring** | UptimeRobot or Better Uptime to alert immediately when the site goes down |
 | ~~6~~ | ~~**Contact Form Real Backend**~~ | ✅ **Intentional decision** — `mailto:` contact form kept. Simple, reliable, no API key dependencies. Closed as won't fix (#55). |
-| 7 | **Database Backups** | Automated PostgreSQL backup schedule with offsite storage and a tested restore process |
+| 7 | **Database Backups** | Current system: automated PostgreSQL backups. During Firebase migration [#76](https://github.com/aaronadams62/pw2/issues/76), re-scope this to Firestore + Storage backup/export strategy (tracked in [#56](https://github.com/aaronadams62/pw2/issues/56)). |
 | ~~8~~ | ~~**Environment Docs (.env.example)**~~ | ✅ **Fixed #57** — `.env.example` was already complete with all required vars documented. |
 | ~~9~~ | ~~**Custom Error Pages**~~ | ✅ **Fixed #58** — Created `NotFound.js` (404) and `ErrorBoundary.js` (500) in `src/components/errors/`. Added `*` catch-all route in `App.js`. Playwright confirmed `/this-does-not-exist` renders the 404 page. |
 | ~~10~~ | ~~**Server-Side Logging**~~ | ✅ **Fixed #59** — Added `morgan` (HTTP request logging) and `winston` (structured app logging) to `server/`. Morgan streams into Winston. Logs written to `server/logs/combined.log` and `server/logs/error.log`. `server/logs/` gitignored. |
@@ -201,3 +201,68 @@ npm start
 | POST | `/api/projects` | JWT | Create project |
 | DELETE | `/api/projects/:id` | JWT | Delete project |
 | POST | `/api/login` | No | Login |
+---
+
+## 9. Code Review Findings (2026-02-25)
+
+> Added from latest code review and linked directly to GitHub issues for tracking.
+
+| Severity | Finding | Location | GitHub Issue | Status |
+|---|---|---|---|---|
+| HIGH | Server does not load `.env` before `JWT_SECRET` startup check | `server/index.js:31-35` | [#68](https://github.com/aaronadams62/pw2/issues/68) | OPEN (deferred while Firebase phase work proceeds) |
+| HIGH | Test suite broken: `react-router-dom` resolution fails in CRA/Jest | `src/App.test.js:2`, `package.json:16`, `src/setupTests.js`, `src/App.js` | [#69](https://github.com/aaronadams62/pw2/issues/69) | CLOSED (v6 router + test/polyfill fixes) |
+| MEDIUM | API starts even when DB initialization fails | `server/index.js:104-153`, `server/index.js:257` | [#70](https://github.com/aaronadams62/pw2/issues/70) | OPEN |
+| MEDIUM | Uploaded image URLs are hardcoded to `localhost` | `server/index.js:251` | [#71](https://github.com/aaronadams62/pw2/issues/71) | OPEN |
+| LOW | Mojibake characters present in AdminDashboard UI strings | `src/components/admin/AdminDashboard.js:140,158,204` | [#72](https://github.com/aaronadams62/pw2/issues/72) | OPEN |
+
+---
+
+## 10. Firebase Spark Migration Plan (Discussion to Execution)
+
+> Decision context (2026-02-25): low-traffic, low-media app, targeting Firebase Spark first.
+
+### Priority Alignment
+- Firebase Spark migration epic [#76](https://github.com/aaronadams62/pw2/issues/76) is the primary architecture track.
+- Next.js migration [#45](https://github.com/aaronadams62/pw2/issues/45) is intentionally deferred until Firebase cutover is complete.
+- Current backend-only risks [#68](https://github.com/aaronadams62/pw2/issues/68), [#70](https://github.com/aaronadams62/pw2/issues/70), and [#71](https://github.com/aaronadams62/pw2/issues/71) remain active until decommission in [#77](https://github.com/aaronadams62/pw2/issues/77), then can be closed as superseded.
+
+### Recommendation
+- Move to a full Firebase-native stack if you want to stay on Spark and remove server ops.
+- Avoid hybrid Cloud Run/Cloud SQL plans while staying on Spark, since those are paid-path services.
+
+### Scope and Tracking
+| Phase | What It Entails | GitHub Issue |
+|---|---|---|
+| Epic | Overall migration ownership, success criteria, and rollup | [#76](https://github.com/aaronadams62/pw2/issues/76) |
+| Phase 1 | Firebase project setup, Hosting, SPA rewrites, env/config docs | [#75](https://github.com/aaronadams62/pw2/issues/75) (READY FOR DEPLOY - project linked, deploy intentionally deferred) |
+| Phase 2 | Replace `/api/projects` flows with Firestore reads/writes | [#78](https://github.com/aaronadams62/pw2/issues/78) (COMPLETED - live Firestore read/write validated) |
+| Phase 3 | Replace multer upload endpoint with Firebase Storage upload flow | [#74](https://github.com/aaronadams62/pw2/issues/74) |
+| Phase 4 | Replace JWT/session token admin auth with Firebase Auth + security rules | [#73](https://github.com/aaronadams62/pw2/issues/73) |
+| Phase 5 | Postgres export/import, parity checks, rollback, and backend decommission | [#77](https://github.com/aaronadams62/pw2/issues/77) |
+
+### Spark Plan Guardrails
+- Track Firestore reads/writes, Storage egress, and Hosting bandwidth monthly.
+- Keep image sizes constrained and lazy-loaded to protect free-tier limits.
+- Define a clear “upgrade to Blaze” trigger if monthly quotas are exceeded.
+
+---
+
+## 11. GitHub Mirror (2026-02-25)
+
+> This table mirrors the current cross-issue alignment decisions so `improvements.md` and GitHub stay consistent.
+
+| Area | Primary Issue(s) | Current Decision | Close Condition |
+|---|---|---|---|
+| Firebase migration program | [#76](https://github.com/aaronadams62/pw2/issues/76), [#75](https://github.com/aaronadams62/pw2/issues/75), [#78](https://github.com/aaronadams62/pw2/issues/78), [#74](https://github.com/aaronadams62/pw2/issues/74), [#73](https://github.com/aaronadams62/pw2/issues/73), [#77](https://github.com/aaronadams62/pw2/issues/77) | Primary roadmap track | All phase issues closed and production cutover verified |
+| Next.js migration priority | [#45](https://github.com/aaronadams62/pw2/issues/45) | Deferred behind Firebase epic | Re-open as active only after #76/#77 completion and SSR/SEO re-evaluation |
+| Remaining mojibake | [#72](https://github.com/aaronadams62/pw2/issues/72) | Still active (despite initial pass fixed in #31) | Close when AdminDashboard text renders cleanly and verified |
+| Legacy backend startup risk (.env load) | [#68](https://github.com/aaronadams62/pw2/issues/68) | Active on current Express stack | Fix on current backend or close as superseded after #77 decommission |
+| Legacy backend DB startup behavior | [#70](https://github.com/aaronadams62/pw2/issues/70) | Active on current Express stack | Fix on current backend or close as superseded after #77 decommission |
+| Legacy upload URL behavior | [#71](https://github.com/aaronadams62/pw2/issues/71) | Active on current Express stack | Fix on current backend or close as superseded after #74/#77 |
+| Backup strategy transition | [#56](https://github.com/aaronadams62/pw2/issues/56) | Re-scope from Postgres to Firestore/Storage during migration | Close after Firebase backup/export plan is documented and tested |
+
+
+
+
+
+

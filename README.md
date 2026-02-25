@@ -1,70 +1,71 @@
-# Getting Started with Create React App
+# PWV2 Portfolio
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React portfolio application with an admin dashboard. The project is currently migrating from Express/PostgreSQL to Firebase.
 
-## Available Scripts
+## Local Development
 
-In the project directory, you can run:
+```powershell
+npm install
+npm start
+```
 
-### `npm start`
+Build/test:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```powershell
+npm test
+npm run build
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Firebase Hosting (Phase 1)
 
-### `npm test`
+This repository now includes Firebase Hosting scaffolding:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- `firebase.json` with SPA rewrites (`** -> /index.html`)
+- `.firebaserc` with a default project placeholder
+- `.firebaseignore` deployment ignore rules
 
-### `npm run build`
+### One-Time Setup
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Create a Firebase project in the Firebase Console.
+2. Update `.firebaserc`:
+   - Replace `replace-with-your-firebase-project-id` with your real project id.
+3. Authenticate CLI:
+   ```powershell
+   npm run firebase:login
+   ```
+4. Link the local repo to your Firebase project (optional if `.firebaserc` is already correct):
+   ```powershell
+   npm run firebase:use
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Deploy Hosting
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```powershell
+npm run firebase:deploy:hosting
+```
 
-### `npm run eject`
+### Run Hosting Emulator
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```powershell
+npm run firebase:serve:hosting
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Environment Variables
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Copy from `.env.example` and set values in `.env`.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Firebase placeholders have been added for migration phases:
 
-## Learn More
+- `REACT_APP_FIREBASE_API_KEY`
+- `REACT_APP_FIREBASE_AUTH_DOMAIN`
+- `REACT_APP_FIREBASE_PROJECT_ID`
+- `REACT_APP_FIREBASE_STORAGE_BUCKET`
+- `REACT_APP_FIREBASE_MESSAGING_SENDER_ID`
+- `REACT_APP_FIREBASE_APP_ID`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Current backend variables remain required until full cutover from Express/PostgreSQL.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Migration Tracking
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Epic: https://github.com/aaronadams62/pw2/issues/76
+- Phase 1 (this setup): https://github.com/aaronadams62/pw2/issues/75

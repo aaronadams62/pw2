@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useSpring, animated } from 'react-spring';
 import './portfolio.css';
+import { getProjects } from '../../services/projectsService';
 
 // Fallback image if none provided
 const PLACEHOLDER_IMG = 'https://via.placeholder.com/400x300?text=Project';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
 
 function Portfolio() {
   const [projects, setProjects] = useState([]);
@@ -19,25 +18,18 @@ function Portfolio() {
   });
 
   useEffect(() => {
-    // Fetch projects from Custom API (localhost:4000)
-    const fetchProjects = async () => {
+    const fetchPortfolioProjects = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/projects`);
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
-        }
-        const data = await response.json();
-        // API returns { data: [ ...projects ] }
-        setProjects(data.data || []);
+        setProjects(await getProjects());
         setLoading(false);
       } catch (err) {
         console.error("Failed to fetch projects:", err);
-        setError("Could not load projects. Ensure Backend is running.");
+        setError("Could not load projects. Ensure backend or Firestore is configured.");
         setLoading(false);
       }
     };
 
-    fetchProjects();
+    fetchPortfolioProjects();
   }, []);
 
   return (
