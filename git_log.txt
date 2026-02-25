@@ -1,0 +1,5 @@
+29fa9fd fix: resolve #69 and prep #75 firebase hosting phase 1
+0ddb381 fix: restore FontAwesomeIcon to footer social links
+0374d27 Merge pull request #67 from aaronadams62/fix/issue-51-44-42-analytics-brand-tracking
+2fa4dcc fix: analytics, conversion tracking, and brand consistency (#51, #42, #44)
+967c4dd Merge pull request #66 from aaronadams62/fix/issue-59-50-43-logging-cicd-a11y

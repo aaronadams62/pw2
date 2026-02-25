@@ -1,0 +1,15 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Phase 2 scope: enable projects collection CRUD from the current app.
+    // Tighten write access in Phase 4 when Firebase Auth is implemented.
+    match /projects/{projectId} {
+      allow read, write: if true;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

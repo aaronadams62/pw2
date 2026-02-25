@@ -235,7 +235,7 @@ npm start
 |---|---|---|
 | Epic | Overall migration ownership, success criteria, and rollup | [#76](https://github.com/aaronadams62/pw2/issues/76) |
 | Phase 1 | Firebase project setup, Hosting, SPA rewrites, env/config docs | [#75](https://github.com/aaronadams62/pw2/issues/75) (READY FOR DEPLOY - project linked, deploy intentionally deferred) |
-| Phase 2 | Replace `/api/projects` flows with Firestore reads/writes | [#78](https://github.com/aaronadams62/pw2/issues/78) |
+| Phase 2 | Replace `/api/projects` flows with Firestore reads/writes | [#78](https://github.com/aaronadams62/pw2/issues/78) (COMPLETED - live Firestore read/write validated) |
 | Phase 3 | Replace multer upload endpoint with Firebase Storage upload flow | [#74](https://github.com/aaronadams62/pw2/issues/74) |
 | Phase 4 | Replace JWT/session token admin auth with Firebase Auth + security rules | [#73](https://github.com/aaronadams62/pw2/issues/73) |
 | Phase 5 | Postgres export/import, parity checks, rollback, and backend decommission | [#77](https://github.com/aaronadams62/pw2/issues/77) |
@@ -260,6 +260,8 @@ npm start
 | Legacy backend DB startup behavior | [#70](https://github.com/aaronadams62/pw2/issues/70) | Active on current Express stack | Fix on current backend or close as superseded after #77 decommission |
 | Legacy upload URL behavior | [#71](https://github.com/aaronadams62/pw2/issues/71) | Active on current Express stack | Fix on current backend or close as superseded after #74/#77 |
 | Backup strategy transition | [#56](https://github.com/aaronadams62/pw2/issues/56) | Re-scope from Postgres to Firestore/Storage during migration | Close after Firebase backup/export plan is documented and tested |
+
+
 
 
 

@@ -1,0 +1,20 @@
+diff --git a/src/App.test.js b/src/App.test.js
+index 7286273..9243200 100644
+--- a/src/App.test.js
++++ b/src/App.test.js
+@@ -1,13 +1,8 @@
+ import { render, screen } from '@testing-library/react';
+-import { MemoryRouter } from 'react-router-dom';
+ import App from './App';
+ 
+ test('renders the portfolio site hero heading', () => {
+-  render(
+-    <MemoryRouter>
+-      <App />
+-    </MemoryRouter>
+-  );
+-  const heading = screen.getByText(/Building Digital Experiences That Drive Results/i);
++  render(<App />);
++  const heading = screen.getByRole('heading', { level: 1, name: /Digital Experiences/i });
+   expect(heading).toBeInTheDocument();
+ });
