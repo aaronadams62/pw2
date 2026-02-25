@@ -1,1 +1,0 @@
-fix/issue-69-75-router-firebase-phase1
