@@ -1,0 +1,12 @@
+# Firebase deployment ignore rules
+node_modules
+.git
+.github
+server
+backend
+*.log
+*.stackdump
+api_debug*.txt
+backend_*logs*.txt
+containers*.txt
+running_*.txt
