@@ -21,16 +21,18 @@ function AdminDashboard() {
 
     useEffect(() => {
         const unsubscribe = subscribeToAuth((user) => {
-            if (isFirebaseAuthEnabled() && !user) {
+            if (!isFirebaseAuthEnabled()) {
                 navigate('/admin');
                 setAuthReady(true);
                 return;
             }
-            if (!isFirebaseAuthEnabled() && !sessionStorage.getItem('adminToken')) {
+
+            if (!user) {
                 navigate('/admin');
                 setAuthReady(true);
                 return;
             }
+
             setAuthReady(true);
             fetchProjects();
         });

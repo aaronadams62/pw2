@@ -8,6 +8,12 @@ const path = require('path');
 const fs = require('fs');
 const morgan = require('morgan');
 const winston = require('winston');
+const dotenv = require('dotenv');
+
+// Load project-level .env first so startup guards use the expected values
+// when running from /server; then attempt local /server/.env as a fallback.
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config();
 
 // Winston logger — writes to console and logs/ directory
 const logger = winston.createLogger({

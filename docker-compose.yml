@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # React Frontend
+  # React Frontend (Firebase-native data/auth)
   frontend:
     build: .
     container_name: portfolio-frontend
@@ -10,45 +10,6 @@ services:
     volumes:
       - ./src:/app/src
       - ./public:/app/public
-    environment:
-      - REACT_APP_API_URL=http://localhost:4000/api
-    depends_on:
-      - api
-
-  # Custom Node.js Backend
-  api:
-    image: node:18-alpine
-    container_name: portfolio-api
-    working_dir: /app
-    volumes:
-      - ./server:/app
-    ports:
-      - "4000:4000"
-    environment:
-      - PORT=4000
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_HOST=postgres
-      - DB_NAME=portfolio
-      - DB_PORT=5432
-      - JWT_SECRET=change_this_to_a_secure_secret
-    command: sh -c "npm install && npm start"
-    depends_on:
-      - postgres
-
-  # PostgreSQL Database
-  postgres:
-    image: postgres:15-alpine
-    container_name: portfolio-postgres
-    restart: always
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=portfolio
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
 
   # Cloudflare Tunnel (Requires TUNNEL_TOKEN in .env)
   tunnel:
@@ -60,7 +21,3 @@ services:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
     depends_on:
       - frontend
-      - api
-
-volumes:
-  postgres-data:

@@ -23,7 +23,7 @@ Transform the static React portfolio into a dynamic, professional-grade applicat
 | Database Schema | PostgreSQL with `projects` and `users` tables |
 | Admin Portal | Login, Dashboard with Add/Delete, Premium dark styling |
 | Contact Form | `mailto:` with pre-filled subject + recipient |
-| Portfolio API | Dynamic content from `localhost:4000/api/projects` |
+| Portfolio Data Layer | Dynamic content from Firestore (`projects` collection) |
 | Routing | `react-router-dom` for `/admin` routes |
 | **UI Redesign - Complete** | Premium dark theme for ALL sections |
 | Header | Glassmorphism sticky nav |
@@ -39,6 +39,7 @@ Transform the static React portfolio into a dynamic, professional-grade applicat
 | **Fix JWT Secret Fallback** (#24) | Startup guard added; `\|\| 'secret'` fallbacks removed from `server/index.js`. Commit `56574c8`. |
 | **Restrict CORS Origins** (#25) | `ALLOWED_ORIGINS` env var replaces open `cors()`. Verified with curl tests. Commit `ec4ec11`. |
 | **Replace Hardcoded API URLs** (#26) | All `http://localhost:4000` fetch calls replaced with `API_URL` constant from `REACT_APP_API_URL` env var across `portfolio.js`, `AdminLogin.js`, `AdminDashboard.js`. Verified via Playwright network requests. |
+| **Firebase Phase 5 Cutover** (#77) | Frontend runtime fully Firebase-native (Firestore/Auth only). Legacy API fallbacks removed from `projectsService` and `authService`; Docker stack simplified to frontend+tunnel. |
 
 ### 🔄 IN PROGRESS
 | Item | Description |
@@ -184,23 +185,20 @@ pwv2/
 
 ```powershell
 # Start Local Dev
-docker-compose up -d postgres
-cd server && node index.js
 npm start
 ```
 
-### Default Admin: set via `ADMIN_USERNAME` and `ADMIN_PASSWORD` in `.env` (no hardcoded credentials)
+### Default Admin: Firebase Auth Email/Password account (configured in Firebase Console)
 
 ---
 
-## 8. API Reference
+## 8. Data/Auth Reference (Firebase Runtime)
 
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/projects` | No | Fetch all projects |
-| POST | `/api/projects` | JWT | Create project |
-| DELETE | `/api/projects/:id` | JWT | Delete project |
-| POST | `/api/login` | No | Login |
+| Surface | Path/Collection | Auth | Description |
+|--------|------------------|------|-------------|
+| Firestore | `projects` collection | Public read, admin write (rules) | Portfolio project data |
+| Firebase Auth | Email/Password sign-in | Admin email(s) only | Admin login/session |
+| Firebase Hosting | SPA rewrite (`** -> /index.html`) | N/A | Frontend deployment/runtime |
 ---
 
 ## 9. Code Review Findings (2026-02-25)
@@ -209,10 +207,10 @@ npm start
 
 | Severity | Finding | Location | GitHub Issue | Status |
 |---|---|---|---|---|
-| HIGH | Server does not load `.env` before `JWT_SECRET` startup check | `server/index.js:31-35` | [#68](https://github.com/aaronadams62/pw2/issues/68) | OPEN (deferred while Firebase phase work proceeds) |
+| HIGH | Server does not load `.env` before `JWT_SECRET` startup check | `server/index.js:31-35` | [#68](https://github.com/aaronadams62/pw2/issues/68) | CLOSED (superseded by Firebase runtime cutover in #77) |
 | HIGH | Test suite broken: `react-router-dom` resolution fails in CRA/Jest | `src/App.test.js:2`, `package.json:16`, `src/setupTests.js`, `src/App.js` | [#69](https://github.com/aaronadams62/pw2/issues/69) | CLOSED (v6 router + test/polyfill fixes) |
-| MEDIUM | API starts even when DB initialization fails | `server/index.js:104-153`, `server/index.js:257` | [#70](https://github.com/aaronadams62/pw2/issues/70) | OPEN |
-| MEDIUM | Uploaded image URLs are hardcoded to `localhost` | `server/index.js:251` | [#71](https://github.com/aaronadams62/pw2/issues/71) | OPEN |
+| MEDIUM | API starts even when DB initialization fails | `server/index.js:104-153`, `server/index.js:257` | [#70](https://github.com/aaronadams62/pw2/issues/70) | CLOSED (superseded by Firebase runtime cutover in #77) |
+| MEDIUM | Uploaded image URLs are hardcoded to `localhost` | `server/index.js:251` | [#71](https://github.com/aaronadams62/pw2/issues/71) | CLOSED (superseded by Firebase runtime cutover in #77; placeholder mode for #74) |
 | LOW | Mojibake characters present in AdminDashboard UI strings | `src/components/admin/AdminDashboard.js:140,158,204` | [#72](https://github.com/aaronadams62/pw2/issues/72) | OPEN |
 
 ---
@@ -224,7 +222,7 @@ npm start
 ### Priority Alignment
 - Firebase Spark migration epic [#76](https://github.com/aaronadams62/pw2/issues/76) is the primary architecture track.
 - Next.js migration [#45](https://github.com/aaronadams62/pw2/issues/45) is intentionally deferred until Firebase cutover is complete.
-- Current backend-only risks [#68](https://github.com/aaronadams62/pw2/issues/68), [#70](https://github.com/aaronadams62/pw2/issues/70), and [#71](https://github.com/aaronadams62/pw2/issues/71) remain active until decommission in [#77](https://github.com/aaronadams62/pw2/issues/77), then can be closed as superseded.
+- Legacy backend-only risks [#68](https://github.com/aaronadams62/pw2/issues/68), [#70](https://github.com/aaronadams62/pw2/issues/70), and [#71](https://github.com/aaronadams62/pw2/issues/71) are superseded after runtime cutover in [#77](https://github.com/aaronadams62/pw2/issues/77).
 
 ### Recommendation
 - Move to a full Firebase-native stack if you want to stay on Spark and remove server ops.
@@ -238,7 +236,7 @@ npm start
 | Phase 2 | Replace `/api/projects` flows with Firestore reads/writes | [#78](https://github.com/aaronadams62/pw2/issues/78) (COMPLETED - live Firestore read/write validated) |
 | Phase 3 | Replace multer upload endpoint with Firebase Storage upload flow | [#74](https://github.com/aaronadams62/pw2/issues/74) (DEFERRED/ON HOLD - standard placeholder image mode active; Storage setup intentionally postponed) |
 | Phase 4 | Replace JWT/session token admin auth with Firebase Auth + security rules | [#73](https://github.com/aaronadams62/pw2/issues/73) (COMPLETED - live Firebase Auth login/session + protected admin routing validated) |
-| Phase 5 | Postgres export/import, parity checks, rollback, and backend decommission | [#77](https://github.com/aaronadams62/pw2/issues/77) |
+| Phase 5 | Postgres export/import, parity checks, rollback, and backend decommission | [#77](https://github.com/aaronadams62/pw2/issues/77) (COMPLETED - frontend runtime decommissioned from legacy Express/Postgres paths) |
 
 ### Spark Plan Guardrails
 - Track Firestore reads/writes, Storage egress, and Hosting bandwidth monthly.
@@ -253,12 +251,12 @@ npm start
 
 | Area | Primary Issue(s) | Current Decision | Close Condition |
 |---|---|---|---|
-| Firebase migration program | [#76](https://github.com/aaronadams62/pw2/issues/76), [#75](https://github.com/aaronadams62/pw2/issues/75), [#78](https://github.com/aaronadams62/pw2/issues/78), [#74](https://github.com/aaronadams62/pw2/issues/74), [#73](https://github.com/aaronadams62/pw2/issues/73), [#77](https://github.com/aaronadams62/pw2/issues/77) | Primary roadmap track; Phase 3 (#74) deferred in placeholder mode until Storage is intentionally resumed | All phase issues closed and production cutover verified |
+| Firebase migration program | [#76](https://github.com/aaronadams62/pw2/issues/76), [#75](https://github.com/aaronadams62/pw2/issues/75), [#78](https://github.com/aaronadams62/pw2/issues/78), [#74](https://github.com/aaronadams62/pw2/issues/74), [#73](https://github.com/aaronadams62/pw2/issues/73), [#77](https://github.com/aaronadams62/pw2/issues/77) | Primary roadmap track; Phase 5 complete, Phase 3 (#74) deferred in placeholder mode until Storage is intentionally resumed | Remaining open phase items reviewed and intentionally deferred/completed |
 | Next.js migration priority | [#45](https://github.com/aaronadams62/pw2/issues/45) | Deferred behind Firebase epic | Re-open as active only after #76/#77 completion and SSR/SEO re-evaluation |
 | Remaining mojibake | [#72](https://github.com/aaronadams62/pw2/issues/72) | Still active (despite initial pass fixed in #31) | Close when AdminDashboard text renders cleanly and verified |
-| Legacy backend startup risk (.env load) | [#68](https://github.com/aaronadams62/pw2/issues/68) | Active on current Express stack | Fix on current backend or close as superseded after #77 decommission |
-| Legacy backend DB startup behavior | [#70](https://github.com/aaronadams62/pw2/issues/70) | Active on current Express stack | Fix on current backend or close as superseded after #77 decommission |
-| Legacy upload URL behavior | [#71](https://github.com/aaronadams62/pw2/issues/71) | Active on current Express stack | Fix on current backend or close as superseded after #74/#77 |
+| Legacy backend startup risk (.env load) | [#68](https://github.com/aaronadams62/pw2/issues/68) | Superseded by Firebase runtime cutover in #77 | Closed as superseded |
+| Legacy backend DB startup behavior | [#70](https://github.com/aaronadams62/pw2/issues/70) | Superseded by Firebase runtime cutover in #77 | Closed as superseded |
+| Legacy upload URL behavior | [#71](https://github.com/aaronadams62/pw2/issues/71) | Superseded by Firebase runtime cutover in #77 and placeholder mode for #74 | Closed as superseded |
 | Backup strategy transition | [#56](https://github.com/aaronadams62/pw2/issues/56) | Re-scope from Postgres to Firestore/Storage during migration | Close after Firebase backup/export plan is documented and tested |
 
 

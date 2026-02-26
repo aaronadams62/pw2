@@ -1,6 +1,6 @@
 # PWV2 Portfolio
 
-React portfolio application with an admin dashboard. The project is currently migrating from Express/PostgreSQL to Firebase.
+React portfolio application with an admin dashboard, now running on a Firebase-native stack (Firestore + Firebase Auth, with Hosting support).
 
 ## Local Development
 
@@ -50,9 +50,10 @@ npm run firebase:deploy:hosting
 npm run firebase:serve:hosting
 ```
 
-## Firebase Data/Auth (Phases 2-4)
+## Firebase Data/Auth (Phases 2-5)
 
-Phase 2 (Firestore project CRUD) is implemented.
+Phase 2 (Firestore project CRUD) and Phase 4 (Firebase Auth admin login/session) are implemented.
+Phase 5 cutover is complete: runtime app flows no longer depend on Express/PostgreSQL endpoints.
 
 Phase 3 and 4 prerequisites in Firebase Console:
 
@@ -80,7 +81,7 @@ Firebase placeholders have been added for migration phases:
 - `REACT_APP_FIREBASE_MESSAGING_SENDER_ID`
 - `REACT_APP_FIREBASE_APP_ID`
 
-Current backend variables remain required until full cutover from Express/PostgreSQL.
+Legacy Express/PostgreSQL environment variables are no longer required for normal app runtime.
 
 ## Migration Tracking
 

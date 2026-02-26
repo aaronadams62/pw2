@@ -8,7 +8,6 @@ function AdminLogin() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const firebaseAuthEnabled = isFirebaseAuthEnabled();
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
@@ -29,16 +28,19 @@ function AdminLogin() {
         <div className="admin-container">
             <div className="admin-login-card">
                 <h2>Admin Portal</h2>
+                {!isFirebaseAuthEnabled() && (
+                    <p className="error-message">Firebase Auth is not configured for this environment.</p>
+                )}
                 {error && <p className="error-message">{error}</p>}
                 <form onSubmit={handleLogin}>
                     <div className="form-group">
-                        <label>{firebaseAuthEnabled ? 'Email' : 'Username or Email'}</label>
+                        <label>Email</label>
                         <input
-                            type={firebaseAuthEnabled ? 'email' : 'text'}
+                            type="email"
                             value={identifier}
                             onChange={(e) => setIdentifier(e.target.value)}
                             required
-                            autoComplete={firebaseAuthEnabled ? 'username' : 'on'}
+                            autoComplete="username"
                         />
                     </div>
                     <div className="form-group">
