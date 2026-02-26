@@ -111,6 +111,27 @@
   overflow: hidden;
 }
 
+/* Tech Stack Tags */
+.portfolio__item-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+}
+
+.portfolio__item-tech-tag {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--accent-primary);
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 4px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
 /* View Site Button */
 .portfolio__item-link {
   display: inline-flex;

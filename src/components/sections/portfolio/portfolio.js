@@ -26,21 +26,28 @@ function Portfolio() {
         {!loading && !error && (
           <div className="portfolio__items">
             {projects.map((project) => {
-              // Custom API returns flat snake_case objects
-              const { id, title, description, live_url, image_url } = project;
-
+              const { id, title, description, live_url, image_url, tech } = project;
               const displayImage = image_url || PLACEHOLDER_IMG;
 
               return (
                 <div className="portfolio__item" key={id}>
                   <img src={displayImage} alt={title} className="portfolio__item-image" loading="lazy" />
-                  <h3 className="portfolio__item-title">{title}</h3>
-                  <p className="portfolio__item-description">{description}</p>
-                  {live_url && (
-                    <a href={live_url} target="_blank" rel="noopener noreferrer" className="portfolio__item-link">
-                      View Site
-                    </a>
-                  )}
+                  <div className="portfolio__item-content">
+                    <h3 className="portfolio__item-title">{title}</h3>
+                    <p className="portfolio__item-description">{description}</p>
+                    {tech && tech.length > 0 && (
+                      <ul className="portfolio__item-tech">
+                        {tech.map((t) => (
+                          <li key={t} className="portfolio__item-tech-tag">{t}</li>
+                        ))}
+                      </ul>
+                    )}
+                    {live_url && (
+                      <a href={live_url} target="_blank" rel="noopener noreferrer" className="portfolio__item-link">
+                        View Site
+                      </a>
+                    )}
+                  </div>
                 </div>
               );
             })}

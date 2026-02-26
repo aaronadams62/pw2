@@ -14,7 +14,8 @@ function AdminDashboard() {
         description: '',
         image_url: PLACEHOLDER_IMG,
         live_url: '',
-        category: 'web'
+        category: 'web',
+        techInput: '',
     });
     const [editingProject, setEditingProject] = useState(null);
     const { authEnabled, authReady, user } = useAuth();
@@ -52,6 +53,7 @@ function AdminDashboard() {
         const payload = {
             ...formData,
             image_url: formData.image_url.trim() || PLACEHOLDER_IMG,
+            tech: formData.techInput.split(',').map(t => t.trim()).filter(Boolean),
         };
 
         try {
@@ -66,7 +68,7 @@ function AdminDashboard() {
             return;
         }
 
-        setFormData({ title: '', description: '', image_url: PLACEHOLDER_IMG, live_url: '', category: 'web' });
+        setFormData({ title: '', description: '', image_url: PLACEHOLDER_IMG, live_url: '', category: 'web', techInput: '' });
         fetchProjects();
     };
 
@@ -77,13 +79,14 @@ function AdminDashboard() {
             description: project.description || '',
             image_url: project.image_url || PLACEHOLDER_IMG,
             live_url: project.live_url || '',
-            category: project.category || 'web'
+            category: project.category || 'web',
+            techInput: Array.isArray(project.tech) ? project.tech.join(', ') : '',
         });
     };
 
     const cancelEdit = () => {
         setEditingProject(null);
-        setFormData({ title: '', description: '', image_url: PLACEHOLDER_IMG, live_url: '', category: 'web' });
+        setFormData({ title: '', description: '', image_url: PLACEHOLDER_IMG, live_url: '', category: 'web', techInput: '' });
     };
 
     if (!authReady) {
@@ -139,6 +142,11 @@ function AdminDashboard() {
                             placeholder="Live URL"
                             value={formData.live_url}
                             onChange={(e) => setFormData({ ...formData, live_url: e.target.value })}
+                        />
+                        <input
+                            placeholder="Tech stack (comma-separated, e.g. React, Node.js, Firebase)"
+                            value={formData.techInput}
+                            onChange={(e) => setFormData({ ...formData, techInput: e.target.value })}
                         />
                         <select
                             value={formData.category}

@@ -24,6 +24,7 @@ const normalizeProject = (project) => ({
   image_url: project.image_url || '',
   live_url: project.live_url || '',
   category: project.category || 'web',
+  tech: Array.isArray(project.tech) ? project.tech : [],
   created_at: project.created_at || null,
 });
 
@@ -42,6 +43,7 @@ export const createProject = async (project) => {
     image_url: project.image_url,
     live_url: project.live_url,
     category: project.category || 'web',
+    tech: Array.isArray(project.tech) ? project.tech : [],
   };
 
   assertFirebaseData();
@@ -61,6 +63,7 @@ export const updateProject = async (id, project) => {
     image_url: project.image_url,
     live_url: project.live_url,
     category: project.category || 'web',
+    tech: Array.isArray(project.tech) ? project.tech : [],
   };
 
   assertFirebaseData();
