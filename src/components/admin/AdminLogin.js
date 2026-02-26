@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './admin.css';
-import { signInAdmin } from '../../services/authService';
+import { resetAdminPassword, signInAdmin } from '../../services/authService';
 import { useAuth } from '../../hooks/useAuth';
 
 function AdminLogin() {
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
+    const [resetLoading, setResetLoading] = useState(false);
     const { authEnabled } = useAuth();
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
+        setSuccess('');
         setLoading(true);
         try {
             await signInAdmin({ identifier, password });
@@ -26,6 +29,20 @@ function AdminLogin() {
         }
     };
 
+    const handleResetPassword = async () => {
+        setError('');
+        setSuccess('');
+        setResetLoading(true);
+        try {
+            await resetAdminPassword({ identifier });
+            setSuccess('Password reset email sent. Check your inbox.');
+        } catch (err) {
+            setError(err.message || 'Unable to send password reset email.');
+        } finally {
+            setResetLoading(false);
+        }
+    };
+
     return (
         <div className="admin-container">
             <div className="admin-login-card">
@@ -34,6 +51,7 @@ function AdminLogin() {
                     <p className="error-message">Firebase Auth is not configured for this environment.</p>
                 )}
                 {error && <p className="error-message">{error}</p>}
+                {success && <p className="success-message">{success}</p>}
                 <form onSubmit={handleLogin}>
                     <div className="form-group">
                         <label>Email</label>
@@ -59,6 +77,14 @@ function AdminLogin() {
                         {loading ? 'Signing In...' : 'Login'}
                     </button>
                 </form>
+                <button
+                    type="button"
+                    className="admin-link-btn"
+                    onClick={handleResetPassword}
+                    disabled={resetLoading || loading}
+                >
+                    {resetLoading ? 'Sending reset email...' : 'Forgot password? Reset'}
+                </button>
             </div>
         </div>
     );

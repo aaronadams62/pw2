@@ -366,6 +366,36 @@
     text-align: center;
 }
 
+.success-message {
+    color: var(--admin-success);
+    background: rgba(34, 197, 94, 0.12);
+    padding: 0.75rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.admin-link-btn {
+    margin-top: 0.75rem;
+    background: transparent;
+    border: none;
+    color: var(--admin-accent);
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.admin-link-btn:hover {
+    text-decoration: underline;
+}
+
+.admin-link-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
 @media (max-width: 1024px) {
     .admin-grid {
         grid-template-columns: 1fr;
