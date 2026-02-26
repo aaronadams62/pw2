@@ -1,0 +1,35 @@
+name: Uptime Check
+
+on:
+  schedule:
+    - cron: "0 */12 * * *"
+  workflow_dispatch:
+
+jobs:
+  uptime:
+    name: Check Site Availability
+    runs-on: ubuntu-latest
+    env:
+      BASE_URL: ${{ vars.UPTIME_CHECK_BASE_URL || 'https://aaronadams.dev' }}
+    steps:
+      - name: Check homepage
+        shell: bash
+        run: |
+          set -euo pipefail
+          code=$(curl -sS -o /dev/null -w "%{http_code}" "$BASE_URL/")
+          echo "Homepage status: $code"
+          if [ "$code" -lt 200 ] || [ "$code" -ge 400 ]; then
+            echo "Homepage check failed for $BASE_URL/"
+            exit 1
+          fi
+
+      - name: Check admin route
+        shell: bash
+        run: |
+          set -euo pipefail
+          code=$(curl -sS -o /dev/null -w "%{http_code}" "$BASE_URL/admin")
+          echo "Admin route status: $code"
+          if [ "$code" -lt 200 ] || [ "$code" -ge 400 ]; then
+            echo "Admin route check failed for $BASE_URL/admin"
+            exit 1
+          fi
