@@ -26,6 +26,7 @@ yarn-error.log*
 # AI tooling
 .claude/
 .playwright-mcp/
+.firebase/
 
 # Server dependencies
 server/node_modules/
