@@ -1,32 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './admin.css';
 import { createProject, deleteProjectById, getProjects, updateProject } from '../../services/projectsService';
+import { isFirebaseAuthEnabled, signOutAdmin, subscribeToAuth } from '../../services/authService';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
+const PLACEHOLDER_IMG = '/placeholder-project.svg';
 
 function AdminDashboard() {
     const [projects, setProjects] = useState([]);
     const [formData, setFormData] = useState({
         title: '',
         description: '',
-        image_url: '',
+        image_url: PLACEHOLDER_IMG,
         live_url: '',
         category: 'web'
     });
     const [editingProject, setEditingProject] = useState(null);
-    const [uploading, setUploading] = useState(false);
+    const [authReady, setAuthReady] = useState(false);
     const navigate = useNavigate();
 
-    const token = sessionStorage.getItem('adminToken');
-
     useEffect(() => {
-        if (!token) {
-            navigate('/admin');
-            return;
-        }
-        fetchProjects();
-    }, [token, navigate]);
+        const unsubscribe = subscribeToAuth((user) => {
+            if (isFirebaseAuthEnabled() && !user) {
+                navigate('/admin');
+                setAuthReady(true);
+                return;
+            }
+            if (!isFirebaseAuthEnabled() && !sessionStorage.getItem('adminToken')) {
+                navigate('/admin');
+                setAuthReady(true);
+                return;
+            }
+            setAuthReady(true);
+            fetchProjects();
+        });
+
+        return () => unsubscribe();
+    }, [navigate]);
 
     const fetchProjects = async () => {
         try {
@@ -37,57 +47,35 @@ function AdminDashboard() {
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm("Delete this project?")) return;
+        if (!window.confirm('Delete this project?')) return;
         try {
             await deleteProjectById(id);
             fetchProjects();
         } catch (err) {
             alert(err.message || 'Delete failed');
-            return;
         }
-    };
-
-    const handleImageUpload = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        setUploading(true);
-        const formDataUpload = new FormData();
-        formDataUpload.append('image', file);
-
-        try {
-            const res = await fetch(`${API_URL}/api/upload`, {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` },
-                body: formDataUpload
-            });
-            const data = await res.json();
-            if (data.url) {
-                setFormData(prev => ({ ...prev, image_url: data.url }));
-            }
-        } catch (err) {
-            console.error('Upload failed:', err);
-            alert('Image upload failed');
-        }
-        setUploading(false);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const payload = {
+            ...formData,
+            image_url: formData.image_url.trim() || PLACEHOLDER_IMG,
+        };
 
         try {
             if (editingProject) {
-                await updateProject(editingProject.id, formData);
+                await updateProject(editingProject.id, payload);
                 setEditingProject(null);
             } else {
-                await createProject(formData);
+                await createProject(payload);
             }
         } catch (err) {
             alert(err.message || 'Save failed');
             return;
         }
 
-        setFormData({ title: '', description: '', image_url: '', live_url: '', category: 'web' });
+        setFormData({ title: '', description: '', image_url: PLACEHOLDER_IMG, live_url: '', category: 'web' });
         fetchProjects();
     };
 
@@ -96,7 +84,7 @@ function AdminDashboard() {
         setFormData({
             title: project.title,
             description: project.description || '',
-            image_url: project.image_url || '',
+            image_url: project.image_url || PLACEHOLDER_IMG,
             live_url: project.live_url || '',
             category: project.category || 'web'
         });
@@ -104,46 +92,45 @@ function AdminDashboard() {
 
     const cancelEdit = () => {
         setEditingProject(null);
-        setFormData({ title: '', description: '', image_url: '', live_url: '', category: 'web' });
+        setFormData({ title: '', description: '', image_url: PLACEHOLDER_IMG, live_url: '', category: 'web' });
     };
+
+    if (!authReady) {
+        return (
+            <div className="admin-dashboard">
+                <p className="empty-state">Checking admin session...</p>
+            </div>
+        );
+    }
 
     return (
         <div className="admin-dashboard">
             <div className="dashboard-header">
                 <h1>Manage Projects</h1>
-                <button onClick={() => { sessionStorage.removeItem('adminToken'); navigate('/'); }}>Logout</button>
+                <button onClick={async () => { await signOutAdmin(); navigate('/'); }}>Logout</button>
             </div>
 
             <div className="admin-grid">
-                {/* Add/Edit Project Form */}
                 <div className="admin-card">
-                    <h3>{editingProject ? '✏️ Edit Project' : '➕ Add New Project'}</h3>
+                    <h3>{editingProject ? 'Edit Project' : 'Add New Project'}</h3>
                     <form onSubmit={handleSubmit}>
                         <input
                             placeholder="Title"
                             value={formData.title}
-                            onChange={e => setFormData({ ...formData, title: e.target.value })}
+                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                             required
                         />
                         <textarea
                             placeholder="Description"
                             value={formData.description}
-                            onChange={e => setFormData({ ...formData, description: e.target.value })}
+                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                             required
                         />
 
-                        {/* Image Upload Section */}
                         <div className="upload-section">
-                            <label className="upload-label">
-                                📷 {uploading ? 'Uploading...' : 'Upload Image'}
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                    disabled={uploading}
-                                    style={{ display: 'none' }}
-                                />
-                            </label>
+                            <p className="empty-state">
+                                Direct upload is on hold. Using a standard placeholder image by default.
+                            </p>
                             {formData.image_url && (
                                 <div className="image-preview">
                                     <img src={formData.image_url} alt="Preview" />
@@ -153,16 +140,19 @@ function AdminDashboard() {
                         </div>
 
                         <input
-                            placeholder="Or paste Image URL manually"
+                            placeholder="Optional: paste custom Image URL"
                             value={formData.image_url}
-                            onChange={e => setFormData({ ...formData, image_url: e.target.value })}
+                            onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                         />
                         <input
                             placeholder="Live URL"
                             value={formData.live_url}
-                            onChange={e => setFormData({ ...formData, live_url: e.target.value })}
+                            onChange={(e) => setFormData({ ...formData, live_url: e.target.value })}
                         />
-                        <select value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}>
+                        <select
+                            value={formData.category}
+                            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                        >
                             <option value="web">Web Development</option>
                             <option value="marketing">Marketing</option>
                         </select>
@@ -179,11 +169,10 @@ function AdminDashboard() {
                     </form>
                 </div>
 
-                {/* Project List */}
                 <div className="project-list">
-                    <h3>📁 Your Projects ({projects.length})</h3>
+                    <h3>Your Projects ({projects.length})</h3>
                     {projects.length === 0 && <p className="empty-state">No projects yet. Add one!</p>}
-                    {projects.map(p => (
+                    {projects.map((p) => (
                         <div key={p.id} className={`project-row ${editingProject?.id === p.id ? 'editing' : ''}`}>
                             <div className="project-info">
                                 <span className="project-title">{p.title}</span>

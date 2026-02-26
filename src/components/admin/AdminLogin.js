@@ -1,33 +1,27 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './admin.css';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
+import { adminEmails } from '../../firebase';
+import { signInAdmin } from '../../services/authService';
 
 function AdminLogin() {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState(adminEmails[0] || '');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setError('');
+        setLoading(true);
         try {
-            const response = await fetch(`${API_URL}/api/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Invalid credentials');
-            }
-
-            const data = await response.json();
-            sessionStorage.setItem('adminToken', data.token);
+            await signInAdmin({ email, password });
             navigate('/admin/dashboard');
         } catch (err) {
-            setError('Invalid username or password');
+            setError(err.message || 'Invalid email or password');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -38,11 +32,13 @@ function AdminLogin() {
                 {error && <p className="error-message">{error}</p>}
                 <form onSubmit={handleLogin}>
                     <div className="form-group">
-                        <label>Username</label>
+                        <label>Email</label>
                         <input
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            autoComplete="username"
                         />
                     </div>
                     <div className="form-group">
@@ -51,9 +47,13 @@ function AdminLogin() {
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            required
+                            autoComplete="current-password"
                         />
                     </div>
-                    <button type="submit" className="admin-btn">Login</button>
+                    <button type="submit" className="admin-btn" disabled={loading}>
+                        {loading ? 'Signing In...' : 'Login'}
+                    </button>
                 </form>
             </div>
         </div>
