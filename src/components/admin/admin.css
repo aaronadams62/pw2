@@ -139,6 +139,13 @@
     font-size: 0.95rem;
 }
 
+.dashboard-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.home-btn,
 .logout-btn {
     background: transparent;
     border: 1px solid var(--admin-border);
@@ -152,6 +159,11 @@
 .logout-btn:hover {
     border-color: var(--admin-danger);
     color: var(--admin-danger);
+}
+
+.home-btn:hover {
+    border-color: var(--admin-accent);
+    color: var(--admin-accent);
 }
 
 .admin-grid {
@@ -447,7 +459,10 @@
 }
 
 .admin-link-btn {
-    margin-top: 0.75rem;
+    display: block;
+    margin-top: 0.5rem;
+    margin-left: auto;
+    margin-right: auto;
     background: transparent;
     border: none;
     color: var(--admin-accent);
@@ -477,6 +492,11 @@
         margin-bottom: 1.2rem;
     }
 
+    .dashboard-header-actions {
+        justify-content: flex-end;
+    }
+
+    .home-btn,
     .logout-btn {
         align-self: flex-end;
     }

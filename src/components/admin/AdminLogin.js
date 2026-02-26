@@ -85,6 +85,13 @@ function AdminLogin() {
                 >
                     {resetLoading ? 'Sending reset email...' : 'Forgot password? Reset'}
                 </button>
+                <button
+                    type="button"
+                    className="admin-link-btn"
+                    onClick={() => navigate('/')}
+                >
+                    Back to Home
+                </button>
             </div>
         </div>
     );

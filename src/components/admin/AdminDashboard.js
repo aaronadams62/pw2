@@ -104,12 +104,22 @@ function AdminDashboard() {
                     <h1>Manage Projects</h1>
                     <p>Update your portfolio content and keep listings current.</p>
                 </div>
-                <button
-                    className="logout-btn"
-                    onClick={async () => { await signOutAdmin(); navigate('/'); }}
-                >
-                    Logout
-                </button>
+                <div className="dashboard-header-actions">
+                    <button
+                        type="button"
+                        className="home-btn"
+                        onClick={() => navigate('/')}
+                    >
+                        Back to Home
+                    </button>
+                    <button
+                        type="button"
+                        className="logout-btn"
+                        onClick={async () => { await signOutAdmin(); navigate('/'); }}
+                    >
+                        Logout
+                    </button>
+                </div>
             </div>
 
             <div className="admin-grid">
