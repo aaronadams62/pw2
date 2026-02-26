@@ -15,9 +15,9 @@ function About() {
   };
 
   const highlights = [
-    { icon: '??', title: 'Mortgage to Tech', desc: '5+ years in finance before making the leap to software development' },
-    { icon: '??', title: 'Always Learning', desc: 'Completed ZTM React, Full-Stack, and exploring ML & cloud computing' },
-    { icon: '??', title: 'Problem Solver', desc: "I build tools that genuinely make people's lives easier" },
+    { icon: '\u{1F680}', title: 'Mortgage to Tech', desc: '5+ years in finance before making the leap to software development' },
+    { icon: '\u{1F4DA}', title: 'Always Learning', desc: 'Completed ZTM React, Full-Stack, and exploring ML & cloud computing' },
+    { icon: '\u{1F4A1}', title: 'Problem Solver', desc: "I build tools that genuinely make people's lives easier" },
   ];
 
   return (
