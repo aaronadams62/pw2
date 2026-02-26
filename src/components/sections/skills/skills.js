@@ -5,19 +5,23 @@ function Skills() {
   const skillCategories = [
     {
       title: 'Frontend Development',
-      skills: ['JavaScript', 'TypeScript', 'React', 'Redux', 'Angular', 'HTML5', 'CSS']
+      skills: ['JavaScript (ES6+)', 'TypeScript', 'React', 'Next.js', 'Redux', 'Angular', 'HTML5', 'CSS3', 'Tailwind CSS', 'Material UI (MUI)']
     },
     {
       title: 'Backend Development',
-      skills: ['ExpressJs', 'Python', 'GraphQL', 'Databases']
+      skills: ['Node.js', 'Express.js', 'FastAPI', 'Python', 'GraphQL', 'Databases']
     },
     {
-      title: 'Cloud & Infrastructure',
-      skills: ['Google Firebase', 'Google Cloud Platform', 'Microsoft Azure', 'Netlify']
+      title: 'Cloud & Hosting',
+      skills: ['Firebase', 'Google Cloud Platform', 'Cloudflare', 'Netlify', 'Vercel', 'Microsoft Azure']
+    },
+    {
+      title: 'Tools & DevOps',
+      skills: ['Docker', 'Docker Compose', 'Nginx', 'Git', 'GitHub', 'GitHub Actions (CI/CD)', 'Playwright', 'Vitest', 'Jest', 'React Testing Library', 'VS Code']
     },
     {
       title: 'Methodologies & Practices',
-      skills: ['Agile', 'SCRUM', 'Kanban', 'Lean', 'Testing', 'Quality Assurance']
+      skills: ['Agile', 'Scrum', 'Kanban', 'Lean', 'Testing', 'Quality Assurance']
     },
     {
       title: 'Core Competencies',
