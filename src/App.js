@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/header/header';
-import Hero from './components/hero/hero';
-import About from './components/about/about';
-import Portfolio from './components/portfolio/portfolio';
-import Skills from './components/skills/skills';
-import Testimonials from './components/testimonials/testimonials';
-import Contact from './components/contact/contact';
-import Footer from './components/footer/footer';
+import Header from './components/layout/header/header';
+import Hero from './components/sections/hero/hero';
+import About from './components/sections/about/about';
+import Portfolio from './components/sections/portfolio/portfolio';
+import Skills from './components/sections/skills/skills';
+import Testimonials from './components/sections/testimonials/testimonials';
+import Contact from './components/sections/contact/contact';
+import Footer from './components/layout/footer/footer';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminDashboard from './components/admin/AdminDashboard';
 import NotFound from './components/errors/NotFound';
 import ErrorBoundary from './components/errors/ErrorBoundary';
+import { ThemeProvider } from './context/ThemeContext';
+import { AuthProvider } from './context/AuthContext';
+import { useTheme } from './hooks/useTheme';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -21,13 +24,11 @@ import './App.css';
 library.add(fab);
 
 function MainSite() {
-  const [theme, setTheme] = useState('night');
-  const toggleTheme = () => setTheme(theme === 'night' ? 'day' : 'night');
+  const { theme } = useTheme();
 
   return (
     <div className="AaronFolio2.0" data-theme={theme}>
-      {/* Passing theme props to Header, will need to update Header to use them if we want the toggle there */}
-      <Header theme={theme} toggleTheme={toggleTheme} />
+      <Header />
       <Hero />
       <About />
       <Portfolio />
@@ -56,14 +57,18 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <Routes>
-          <Route path="/" element={<MainSite />} />
-          <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Router>
+      <ThemeProvider>
+        <AuthProvider>
+          <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <Routes>
+              <Route path="/" element={<MainSite />} />
+              <Route path="/admin" element={<AdminLogin />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Router>
+        </AuthProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

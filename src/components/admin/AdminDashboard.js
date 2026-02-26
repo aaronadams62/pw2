@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './admin.css';
 import { createProject, deleteProjectById, getProjects, updateProject } from '../../services/projectsService';
-import { isFirebaseAuthEnabled, signOutAdmin, subscribeToAuth } from '../../services/authService';
+import { signOutAdmin } from '../../services/authService';
+import { useAuth } from '../../hooks/useAuth';
 
 const PLACEHOLDER_IMG = '/placeholder-project.svg';
 
@@ -16,29 +17,17 @@ function AdminDashboard() {
         category: 'web'
     });
     const [editingProject, setEditingProject] = useState(null);
-    const [authReady, setAuthReady] = useState(false);
+    const { authEnabled, authReady, user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
-        const unsubscribe = subscribeToAuth((user) => {
-            if (!isFirebaseAuthEnabled()) {
-                navigate('/admin');
-                setAuthReady(true);
-                return;
-            }
-
-            if (!user) {
-                navigate('/admin');
-                setAuthReady(true);
-                return;
-            }
-
-            setAuthReady(true);
-            fetchProjects();
-        });
-
-        return () => unsubscribe();
-    }, [navigate]);
+        if (!authReady) return;
+        if (!authEnabled || !user) {
+            navigate('/admin');
+            return;
+        }
+        fetchProjects();
+    }, [authEnabled, authReady, navigate, user]);
 
     const fetchProjects = async () => {
         try {

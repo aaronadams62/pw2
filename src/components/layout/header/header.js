@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useTheme } from '../../../hooks/useTheme';
 import './header.css'
 
-function Header({ theme, toggleTheme }) {
+function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);

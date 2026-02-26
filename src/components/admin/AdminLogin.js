@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './admin.css';
-import { isFirebaseAuthEnabled, signInAdmin } from '../../services/authService';
+import { signInAdmin } from '../../services/authService';
+import { useAuth } from '../../hooks/useAuth';
 
 function AdminLogin() {
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const { authEnabled } = useAuth();
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
@@ -28,7 +30,7 @@ function AdminLogin() {
         <div className="admin-container">
             <div className="admin-login-card">
                 <h2>Admin Portal</h2>
-                {!isFirebaseAuthEnabled() && (
+                {!authEnabled && (
                     <p className="error-message">Firebase Auth is not configured for this environment.</p>
                 )}
                 {error && <p className="error-message">{error}</p>}

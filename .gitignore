@@ -33,3 +33,6 @@ server/package-lock.json
 
 # Server logs
 server/logs/
+
+# Windows crash dumps
+bash.exe.stackdump

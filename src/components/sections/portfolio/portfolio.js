@@ -1,36 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useSpring, animated } from 'react-spring';
 import './portfolio.css';
-import { getProjects } from '../../services/projectsService';
+import { useProjects } from '../../../hooks/useProjects';
 
 // Fallback image if none provided
 const PLACEHOLDER_IMG = '/placeholder-project.svg';
 
 function Portfolio() {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { projects, loading, error } = useProjects();
 
   const props = useSpring({
     opacity: 1,
     fontWeight: 700,
     from: { opacity: 0, fontWeight: 400 },
   });
-
-  useEffect(() => {
-    const fetchPortfolioProjects = async () => {
-      try {
-        setProjects(await getProjects());
-        setLoading(false);
-      } catch (err) {
-        console.error("Failed to fetch projects:", err);
-        setError("Could not load projects. Ensure backend or Firestore is configured.");
-        setLoading(false);
-      }
-    };
-
-    fetchPortfolioProjects();
-  }, []);
 
   return (
     <animated.section id="portfolio" className="portfolio" style={props}>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './about.css';
-import profileImage from '../../photos/aaron_adams_fullstack_full_stack_engineer_react_software_developer.png.jpg';
-import resumeFile from './finalized resume 3.docx';
+import profileImage from '../../../assets/images/aaron_adams_fullstack_full_stack_engineer_react_software_developer.png.jpg';
+import resumeFile from '../../../assets/documents/aaron-adams-resume.pdf';
 
 function About() {
   const [showPopup, setShowPopup] = useState(false);
@@ -10,7 +10,7 @@ function About() {
     setShowPopup(true);
     const link = document.createElement('a');
     link.href = resumeFile;
-    link.download = 'finalized_resume_3.docx';
+    link.download = 'aaron-adams-resume.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
