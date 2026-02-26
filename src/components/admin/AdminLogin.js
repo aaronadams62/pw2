@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './admin.css';
-import { adminEmails } from '../../firebase';
-import { signInAdmin } from '../../services/authService';
+import { isFirebaseAuthEnabled, signInAdmin } from '../../services/authService';
 
 function AdminLogin() {
-    const [email, setEmail] = useState(adminEmails[0] || '');
+    const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const firebaseAuthEnabled = isFirebaseAuthEnabled();
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
@@ -16,10 +16,10 @@ function AdminLogin() {
         setError('');
         setLoading(true);
         try {
-            await signInAdmin({ email, password });
+            await signInAdmin({ identifier, password });
             navigate('/admin/dashboard');
         } catch (err) {
-            setError(err.message || 'Invalid email or password');
+            setError(err.message || 'Invalid credentials');
         } finally {
             setLoading(false);
         }
@@ -32,13 +32,13 @@ function AdminLogin() {
                 {error && <p className="error-message">{error}</p>}
                 <form onSubmit={handleLogin}>
                     <div className="form-group">
-                        <label>Email</label>
+                        <label>{firebaseAuthEnabled ? 'Email' : 'Username or Email'}</label>
                         <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            type={firebaseAuthEnabled ? 'email' : 'text'}
+                            value={identifier}
+                            onChange={(e) => setIdentifier(e.target.value)}
                             required
-                            autoComplete="username"
+                            autoComplete={firebaseAuthEnabled ? 'username' : 'on'}
                         />
                     </div>
                     <div className="form-group">

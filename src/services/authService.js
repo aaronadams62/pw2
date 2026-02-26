@@ -1,5 +1,5 @@
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { auth, isAdminEmail, isFirebaseConfigured } from '../firebase';
+import { auth, isFirebaseConfigured } from '../firebase';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
 
@@ -22,13 +22,11 @@ export const subscribeToAuth = (callback) => {
   return onAuthStateChanged(auth, callback);
 };
 
-export const signInAdmin = async ({ email, password }) => {
+export const signInAdmin = async ({ identifier, email, password }) => {
+  const loginId = (identifier || email || '').trim();
+
   if (isFirebaseAuthEnabled()) {
-    const cred = await signInWithEmailAndPassword(auth, email, password);
-    if (!isAdminEmail(cred.user.email)) {
-      await signOut(auth);
-      throw new Error('This account is not authorized for admin access.');
-    }
+    const cred = await signInWithEmailAndPassword(auth, loginId, password);
     return { mode: 'firebase', user: cred.user };
   }
 
@@ -36,7 +34,7 @@ export const signInAdmin = async ({ email, password }) => {
   const response = await fetch(`${baseUrl}/api/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username: email, password }),
+    body: JSON.stringify({ username: loginId, password }),
   });
   if (!response.ok) {
     throw new Error('Invalid credentials');

@@ -31,17 +31,4 @@ if (isFirebaseConfigured) {
   storage = getStorage(app);
 }
 
-const parseAdminEmails = () => {
-  const raw = process.env.REACT_APP_ADMIN_EMAILS || process.env.REACT_APP_ADMIN_EMAIL || '';
-  return raw
-    .split(',')
-    .map((e) => e.trim().toLowerCase())
-    .filter(Boolean);
-};
-
-export const adminEmails = parseAdminEmails();
-
-export const isAdminEmail = (email) =>
-  Boolean(email && adminEmails.includes(String(email).toLowerCase()));
-
 export { app, auth, db, storage };
