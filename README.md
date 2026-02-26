@@ -50,6 +50,23 @@ npm run firebase:deploy:hosting
 npm run firebase:serve:hosting
 ```
 
+## Firebase Data/Auth (Phases 2-4)
+
+Phase 2 (Firestore project CRUD) is implemented.
+
+Phase 3 and 4 prerequisites in Firebase Console:
+
+1. Enable Firebase Storage:
+   - Console -> Build -> Storage -> Get Started
+2. Enable Firebase Auth Email/Password:
+   - Console -> Build -> Authentication -> Sign-in method -> Email/Password -> Enable
+
+After enabling those, deploy rules:
+
+```powershell
+npx firebase-tools deploy --only firestore:rules,storage --project pwv2-e495e --config firebase.json
+```
+
 ## Environment Variables
 
 Copy from `.env.example` and set values in `.env`.

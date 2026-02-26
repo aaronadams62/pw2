@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-label="Project placeholder image">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)" />
+  <g fill="none" stroke="#334155" stroke-width="2">
+    <circle cx="170" cy="150" r="90" />
+    <circle cx="1040" cy="620" r="120" />
+    <rect x="260" y="140" width="680" height="520" rx="24" />
+  </g>
+  <text x="600" y="390" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI, Arial, sans-serif" font-size="56" font-weight="700">
+    Project Image
+  </text>
+  <text x="600" y="450" text-anchor="middle" fill="#94a3b8" font-family="Segoe UI, Arial, sans-serif" font-size="28">
+    Placeholder
+  </text>
+</svg>

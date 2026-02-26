@@ -236,8 +236,8 @@ npm start
 | Epic | Overall migration ownership, success criteria, and rollup | [#76](https://github.com/aaronadams62/pw2/issues/76) |
 | Phase 1 | Firebase project setup, Hosting, SPA rewrites, env/config docs | [#75](https://github.com/aaronadams62/pw2/issues/75) (READY FOR DEPLOY - project linked, deploy intentionally deferred) |
 | Phase 2 | Replace `/api/projects` flows with Firestore reads/writes | [#78](https://github.com/aaronadams62/pw2/issues/78) (COMPLETED - live Firestore read/write validated) |
-| Phase 3 | Replace multer upload endpoint with Firebase Storage upload flow | [#74](https://github.com/aaronadams62/pw2/issues/74) |
-| Phase 4 | Replace JWT/session token admin auth with Firebase Auth + security rules | [#73](https://github.com/aaronadams62/pw2/issues/73) |
+| Phase 3 | Replace multer upload endpoint with Firebase Storage upload flow | [#74](https://github.com/aaronadams62/pw2/issues/74) (DEFERRED/ON HOLD - standard placeholder image mode active; Storage setup intentionally postponed) |
+| Phase 4 | Replace JWT/session token admin auth with Firebase Auth + security rules | [#73](https://github.com/aaronadams62/pw2/issues/73) (COMPLETED - live Firebase Auth login/session + protected admin routing validated) |
 | Phase 5 | Postgres export/import, parity checks, rollback, and backend decommission | [#77](https://github.com/aaronadams62/pw2/issues/77) |
 
 ### Spark Plan Guardrails
@@ -253,13 +253,16 @@ npm start
 
 | Area | Primary Issue(s) | Current Decision | Close Condition |
 |---|---|---|---|
-| Firebase migration program | [#76](https://github.com/aaronadams62/pw2/issues/76), [#75](https://github.com/aaronadams62/pw2/issues/75), [#78](https://github.com/aaronadams62/pw2/issues/78), [#74](https://github.com/aaronadams62/pw2/issues/74), [#73](https://github.com/aaronadams62/pw2/issues/73), [#77](https://github.com/aaronadams62/pw2/issues/77) | Primary roadmap track | All phase issues closed and production cutover verified |
+| Firebase migration program | [#76](https://github.com/aaronadams62/pw2/issues/76), [#75](https://github.com/aaronadams62/pw2/issues/75), [#78](https://github.com/aaronadams62/pw2/issues/78), [#74](https://github.com/aaronadams62/pw2/issues/74), [#73](https://github.com/aaronadams62/pw2/issues/73), [#77](https://github.com/aaronadams62/pw2/issues/77) | Primary roadmap track; Phase 3 (#74) deferred in placeholder mode until Storage is intentionally resumed | All phase issues closed and production cutover verified |
 | Next.js migration priority | [#45](https://github.com/aaronadams62/pw2/issues/45) | Deferred behind Firebase epic | Re-open as active only after #76/#77 completion and SSR/SEO re-evaluation |
 | Remaining mojibake | [#72](https://github.com/aaronadams62/pw2/issues/72) | Still active (despite initial pass fixed in #31) | Close when AdminDashboard text renders cleanly and verified |
 | Legacy backend startup risk (.env load) | [#68](https://github.com/aaronadams62/pw2/issues/68) | Active on current Express stack | Fix on current backend or close as superseded after #77 decommission |
 | Legacy backend DB startup behavior | [#70](https://github.com/aaronadams62/pw2/issues/70) | Active on current Express stack | Fix on current backend or close as superseded after #77 decommission |
 | Legacy upload URL behavior | [#71](https://github.com/aaronadams62/pw2/issues/71) | Active on current Express stack | Fix on current backend or close as superseded after #74/#77 |
 | Backup strategy transition | [#56](https://github.com/aaronadams62/pw2/issues/56) | Re-scope from Postgres to Firestore/Storage during migration | Close after Firebase backup/export plan is documented and tested |
+
+
+
 
 
 

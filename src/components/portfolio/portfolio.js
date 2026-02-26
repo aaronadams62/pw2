@@ -4,7 +4,7 @@ import './portfolio.css';
 import { getProjects } from '../../services/projectsService';
 
 // Fallback image if none provided
-const PLACEHOLDER_IMG = 'https://via.placeholder.com/400x300?text=Project';
+const PLACEHOLDER_IMG = '/placeholder-project.svg';
 
 function Portfolio() {
   const [projects, setProjects] = useState([]);
