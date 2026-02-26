@@ -10,9 +10,22 @@ jobs:
     name: Check Site Availability
     runs-on: ubuntu-latest
     env:
-      BASE_URL: ${{ vars.UPTIME_CHECK_BASE_URL || 'https://aaronadams.dev' }}
+      BASE_URL: ${{ vars.UPTIME_CHECK_BASE_URL }}
     steps:
+      - name: Validate configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${BASE_URL:-}" ]; then
+            echo "::warning::UPTIME_CHECK_BASE_URL is not configured. Skipping uptime checks."
+            echo "RUN_CHECKS=false" >> "$GITHUB_ENV"
+          else
+            echo "Monitoring base URL: $BASE_URL"
+            echo "RUN_CHECKS=true" >> "$GITHUB_ENV"
+          fi
+
       - name: Check homepage
+        if: env.RUN_CHECKS == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -24,6 +37,7 @@ jobs:
           fi
 
       - name: Check admin route
+        if: env.RUN_CHECKS == 'true'
         shell: bash
         run: |
           set -euo pipefail
