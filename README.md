@@ -83,6 +83,20 @@ Firebase placeholders have been added for migration phases:
 
 Legacy Express/PostgreSQL environment variables are no longer required for normal app runtime.
 
+## Error Monitoring (Sentry)
+
+Optional Sentry scaffolding is included:
+
+- Frontend capture: `src/sentry.js` + `ErrorBoundary` integration
+- Backend capture: `server/index.js` (Express/global handlers)
+
+Environment variables:
+
+- `REACT_APP_SENTRY_DSN`, `REACT_APP_SENTRY_ENVIRONMENT`, `REACT_APP_SENTRY_TRACES_SAMPLE_RATE`
+- `SENTRY_DSN`, `SENTRY_ENVIRONMENT`, `SENTRY_TRACES_SAMPLE_RATE`
+
+If DSN values are blank, Sentry is disabled.
+
 ## Migration Tracking
 
 - Epic: https://github.com/aaronadams62/pw2/issues/76

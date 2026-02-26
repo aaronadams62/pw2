@@ -9,6 +9,7 @@ const fs = require('fs');
 const morgan = require('morgan');
 const winston = require('winston');
 const dotenv = require('dotenv');
+const Sentry = require('@sentry/node');
 
 // Load project-level .env first so startup guards use the expected values
 // when running from /server; then attempt local /server/.env as a fallback.
@@ -28,6 +29,28 @@ const logger = winston.createLogger({
         new winston.transports.File({ filename: path.join(__dirname, 'logs', 'combined.log') }),
     ],
 });
+
+const parseSampleRate = (rawValue) => {
+    const parsed = Number(rawValue);
+    if (Number.isNaN(parsed) || parsed < 0 || parsed > 1) return 0;
+    return parsed;
+};
+
+const sentryEnabled = Boolean(process.env.SENTRY_DSN);
+if (sentryEnabled) {
+    Sentry.init({
+        dsn: process.env.SENTRY_DSN,
+        environment: process.env.SENTRY_ENVIRONMENT || process.env.NODE_ENV || 'development',
+        tracesSampleRate: parseSampleRate(process.env.SENTRY_TRACES_SAMPLE_RATE),
+        beforeSend(event) {
+            if (event.request && event.request.data) {
+                delete event.request.data;
+            }
+            return event;
+        },
+    });
+    logger.info('Sentry monitoring enabled for backend.');
+}
 
 // Ensure logs directory exists
 const logsDir = path.join(__dirname, 'logs');
@@ -246,6 +269,26 @@ app.put('/api/projects/:id', authenticateToken, async (req, res) => {
         logger.error(err.message);
         res.status(500).json({ error: "Failed to update project" });
     }
+});
+
+app.use((err, req, res, next) => {
+    logger.error(err.message);
+    if (sentryEnabled) {
+        Sentry.captureException(err);
+    }
+    if (res.headersSent) return next(err);
+    return res.status(500).json({ error: 'Unexpected server error' });
+});
+
+process.on('unhandledRejection', (reason) => {
+    const error = reason instanceof Error ? reason : new Error(String(reason));
+    logger.error(`Unhandled Rejection: ${error.message}`);
+    if (sentryEnabled) Sentry.captureException(error);
+});
+
+process.on('uncaughtException', (error) => {
+    logger.error(`Uncaught Exception: ${error.message}`);
+    if (sentryEnabled) Sentry.captureException(error);
 });
 
 // UPLOAD Image (Protected)

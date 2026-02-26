@@ -1,5 +1,6 @@
 import React from 'react';
 import './errors.css';
+import { captureFrontendException } from '../../sentry';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -13,6 +14,7 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, info) {
     console.error('ErrorBoundary caught:', error, info);
+    captureFrontendException(error, { extra: { componentStack: info?.componentStack } });
   }
 
   render() {

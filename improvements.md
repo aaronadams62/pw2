@@ -96,7 +96,7 @@ Transform the static React portfolio into a dynamic, professional-grade applicat
 | # | Item | Location | Description |
 |---|------|----------|-------------|
 | ~~8~~ | ~~**Stale Test Suite**~~ | ~~`src/App.test.js:4,6`~~ | ✅ **Fixed #30** — Updated test to assert hero heading `"Building Digital Experiences That Drive Results"`. Playwright confirmed heading exists in live UI. |
-| ~~9~~ | ~~**Mojibake / Encoding Artifacts (Initial Pass)**~~ | ~~`about.js:24,25,26,43,64`, `hero.js:8`~~ | ✅ **Fixed #31** — Initial affected locations were resolved in the UI redesign. Remaining artifacts are tracked in [#72](https://github.com/aaronadams62/pw2/issues/72). |
+| ~~9~~ | ~~**Mojibake / Encoding Artifacts (Initial Pass)**~~ | ~~`about.js:24,25,26,43,64`, `hero.js:8`~~ | ✅ **Fixed #31** — Initial affected locations were resolved in the UI redesign. Follow-up AdminDashboard cleanup completed and closed in [#72](https://github.com/aaronadams62/pw2/issues/72). |
 | ~~10~~ | ~~**Unused Import Lint Warning**~~ | ~~`footer.js:4`~~ | ✅ **Fixed #32** — Removed unused `FontAwesomeIcon` import from `footer.js`. Footer renders correctly (CSS class-based icons unaffected). |
 
 ---
@@ -171,7 +171,7 @@ pwv2/
 | ~~1~~ | ~~**CI/CD Pipeline**~~ | ✅ **Fixed #50** — `.github/workflows/ci.yml` created. Runs `npm ci`, `npm test`, and `npm run build` on every push/PR to master/main. |
 | ~~2~~ | ~~**Analytics**~~ | ✅ **Fixed #51** — GA4 scaffold in `App.js`. Loads gtag only when `REACT_APP_GA_MEASUREMENT_ID` env var is set. Documented in `.env.example`. |
 | ~~3~~ | ~~**SEO Essentials**~~ | ✅ **Fixed #52** — `sitemap.xml` created, `robots.txt` updated with Sitemap reference and `/admin` disallow. JSON-LD Person + WebSite schema added to `public/index.html`. Meta/OG/Twitter already present. |
-| 4 | **Error Monitoring** | Sentry (or similar) on both frontend and backend to catch and alert on runtime errors |
+| ~~4~~ | ~~**Error Monitoring**~~ | ✅ **Fixed #53** — Added env-gated Sentry scaffolding on frontend (`src/sentry.js` + `ErrorBoundary`) and backend (`server/index.js` global handlers), with request-body filtering and DSN/env vars documented. |
 | 5 | **Uptime Monitoring** | UptimeRobot or Better Uptime to alert immediately when the site goes down |
 | ~~6~~ | ~~**Contact Form Real Backend**~~ | ✅ **Intentional decision** — `mailto:` contact form kept. Simple, reliable, no API key dependencies. Closed as won't fix (#55). |
 | 7 | **Database Backups** | Current system: automated PostgreSQL backups. During Firebase migration [#76](https://github.com/aaronadams62/pw2/issues/76), re-scope this to Firestore + Storage backup/export strategy (tracked in [#56](https://github.com/aaronadams62/pw2/issues/56)). |
@@ -211,7 +211,7 @@ npm start
 | HIGH | Test suite broken: `react-router-dom` resolution fails in CRA/Jest | `src/App.test.js:2`, `package.json:16`, `src/setupTests.js`, `src/App.js` | [#69](https://github.com/aaronadams62/pw2/issues/69) | CLOSED (v6 router + test/polyfill fixes) |
 | MEDIUM | API starts even when DB initialization fails | `server/index.js:104-153`, `server/index.js:257` | [#70](https://github.com/aaronadams62/pw2/issues/70) | CLOSED (superseded by Firebase runtime cutover in #77) |
 | MEDIUM | Uploaded image URLs are hardcoded to `localhost` | `server/index.js:251` | [#71](https://github.com/aaronadams62/pw2/issues/71) | CLOSED (superseded by Firebase runtime cutover in #77; placeholder mode for #74) |
-| LOW | Mojibake characters present in AdminDashboard UI strings | `src/components/admin/AdminDashboard.js:140,158,204` | [#72](https://github.com/aaronadams62/pw2/issues/72) | OPEN |
+| LOW | Mojibake characters present in AdminDashboard UI strings | `src/components/admin/AdminDashboard.js:140,158,204` | [#72](https://github.com/aaronadams62/pw2/issues/72) | CLOSED (verified clean source + Playwright UI check) |
 
 ---
 
@@ -253,7 +253,7 @@ npm start
 |---|---|---|---|
 | Firebase migration program | [#76](https://github.com/aaronadams62/pw2/issues/76), [#75](https://github.com/aaronadams62/pw2/issues/75), [#78](https://github.com/aaronadams62/pw2/issues/78), [#74](https://github.com/aaronadams62/pw2/issues/74), [#73](https://github.com/aaronadams62/pw2/issues/73), [#77](https://github.com/aaronadams62/pw2/issues/77) | Primary roadmap track; Phase 5 complete, Phase 3 (#74) deferred in placeholder mode until Storage is intentionally resumed | Remaining open phase items reviewed and intentionally deferred/completed |
 | Next.js migration priority | [#45](https://github.com/aaronadams62/pw2/issues/45) | Deferred behind Firebase epic | Re-open as active only after #76/#77 completion and SSR/SEO re-evaluation |
-| Remaining mojibake | [#72](https://github.com/aaronadams62/pw2/issues/72) | Still active (despite initial pass fixed in #31) | Close when AdminDashboard text renders cleanly and verified |
+| Remaining mojibake | [#72](https://github.com/aaronadams62/pw2/issues/72) | Resolved and verified on AdminDashboard strings | Closed |
 | Legacy backend startup risk (.env load) | [#68](https://github.com/aaronadams62/pw2/issues/68) | Superseded by Firebase runtime cutover in #77 | Closed as superseded |
 | Legacy backend DB startup behavior | [#70](https://github.com/aaronadams62/pw2/issues/70) | Superseded by Firebase runtime cutover in #77 | Closed as superseded |
 | Legacy upload URL behavior | [#71](https://github.com/aaronadams62/pw2/issues/71) | Superseded by Firebase runtime cutover in #77 and placeholder mode for #74 | Closed as superseded |
