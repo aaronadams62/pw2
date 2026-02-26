@@ -40,12 +40,13 @@ Transform the static React portfolio into a dynamic, professional-grade applicat
 | **Restrict CORS Origins** (#25) | `ALLOWED_ORIGINS` env var replaces open `cors()`. Verified with curl tests. Commit `ec4ec11`. |
 | **Replace Hardcoded API URLs** (#26) | All `http://localhost:4000` fetch calls replaced with `API_URL` constant from `REACT_APP_API_URL` env var across `portfolio.js`, `AdminLogin.js`, `AdminDashboard.js`. Verified via Playwright network requests. |
 | **Firebase Phase 5 Cutover** (#77) | Frontend runtime fully Firebase-native (Firestore/Auth only). Legacy API fallbacks removed from `projectsService` and `authService`; Docker stack simplified to frontend+tunnel. |
+| **Resume Link / Resume Refresh** (#48) | Updated `src/assets/documents/aaron-adams-resume.pdf` from latest resume source and split About CTA into explicit `View Resume` (new tab) + `Download Resume` (download attribute). Verified in browser. |
+| **Cloudflare Tunnel** (#16) | Closed as not applicable for the Firebase Hosting architecture (`https://pwv2-e495e.web.app` is public by default). |
 
 ### 🔄 IN PROGRESS
 | Item | Description |
 |------|-------------|
 | **Fill Out All Sections** | Go through and fill in all the sections for the website |
-| **Resume Link** | Have resume pop up in another web link; also available for download |
 | **Finish Other Projects** | Finish other projects and add them to the website |
 
 ### ⏳ TODO
@@ -54,13 +55,12 @@ Transform the static React portfolio into a dynamic, professional-grade applicat
 | **Migrate to Next.js** | Deferred behind Firebase Spark migration epic [#76](https://github.com/aaronadams62/pw2/issues/76); reassess after cutover based on SSR/SEO needs. |
 | **Confirm Localhost Setup** | Verify Docker, backend API, and frontend all start correctly and communicate as expected locally |
 | **Full Site Content Audit** | Review every section of the site and make sure all content, links, projects, skills, and info are current and accurate |
-| **Update Full Stack Engineer Resume** | Replace resume on the site with the most recent version; ensure it opens in a new tab and is available for download |
 | **Full Security Suite Check (Post-Launch)** | Run a comprehensive security audit across frontend, backend, infrastructure, and dependencies after all other work is complete |
 | ~~Admin - Edit Project~~ | ✅ Allow editing existing projects |
 | ~~Admin - Image Upload~~ | ✅ Upload thumbnails with preview |
-| **Cloudflare Tunnel** | Configure for public access ← NEXT |
+| ~~Cloudflare Tunnel~~ | ✅ N/A with Firebase Hosting public deployment; issue #16 closed as not planned |
 | ~~Mobile Responsiveness~~ | ✅ Full responsive audit complete |
-| **About Me - Resume Update** | Go through About Me section and add most recent updated resume |
+| ~~About Me - Resume Update~~ | ✅ Completed with #48 (About section now has `View Resume` + `Download Resume` using the refreshed PDF asset) |
 | **Portfolio - Live Code Button** | Add a button on each portfolio card to show the live code |
 | **Test Files** | Build out test files for each section |
 | **Domain Update** | Update the domain aaronadams.dev with updated pw2 code |

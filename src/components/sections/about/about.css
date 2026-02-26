@@ -124,19 +124,26 @@
   line-height: 1.5;
 }
 
-/* ========== Resume Button ========== */
+/* ========== Resume Actions ========== */
+.about__resume-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
 .about__resume-link {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   padding: 14px 28px;
-  margin-top: 8px;
   font-size: 1rem;
   font-weight: 600;
   color: white;
   background: var(--accent-gradient);
   border: none;
   border-radius: 10px;
+  text-decoration: none;
   cursor: pointer;
   box-shadow: 0 4px 15px var(--accent-glow);
   transition: all var(--transition-base);
@@ -145,6 +152,17 @@
 .about__resume-link:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px var(--accent-glow);
+}
+
+.about__resume-link--secondary {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  box-shadow: none;
+}
+
+.about__resume-link--secondary:hover {
+  border-color: var(--border-accent);
 }
 
 /* ========== Popup ========== */
@@ -226,5 +244,9 @@
     flex-direction: column;
     text-align: center;
     align-items: center;
+  }
+
+  .about__resume-actions {
+    justify-content: center;
   }
 }
