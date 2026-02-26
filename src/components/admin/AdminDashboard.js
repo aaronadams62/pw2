@@ -100,29 +100,47 @@ function AdminDashboard() {
     return (
         <div className="admin-dashboard">
             <div className="dashboard-header">
-                <h1>Manage Projects</h1>
-                <button onClick={async () => { await signOutAdmin(); navigate('/'); }}>Logout</button>
+                <div className="dashboard-header-copy">
+                    <h1>Manage Projects</h1>
+                    <p>Update your portfolio content and keep listings current.</p>
+                </div>
+                <button
+                    className="logout-btn"
+                    onClick={async () => { await signOutAdmin(); navigate('/'); }}
+                >
+                    Logout
+                </button>
             </div>
 
             <div className="admin-grid">
-                <div className="admin-card">
+                <div className="admin-card admin-card--form">
                     <h3>{editingProject ? 'Edit Project' : 'Add New Project'}</h3>
-                    <form onSubmit={handleSubmit}>
-                        <input
-                            placeholder="Title"
-                            value={formData.title}
-                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                            required
-                        />
-                        <textarea
-                            placeholder="Description"
-                            value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            required
-                        />
+                    <form className="admin-project-form" onSubmit={handleSubmit}>
+                        <div className="field-group">
+                            <label htmlFor="project-title">Project Title</label>
+                            <input
+                                id="project-title"
+                                placeholder="United Camper — Regional Rental Hub"
+                                value={formData.title}
+                                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                required
+                            />
+                        </div>
+
+                        <div className="field-group">
+                            <label htmlFor="project-description">Description</label>
+                            <textarea
+                                id="project-description"
+                                placeholder="Summarize the problem, solution, and outcome."
+                                value={formData.description}
+                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                rows={4}
+                                required
+                            />
+                        </div>
 
                         <div className="upload-section">
-                            <p className="empty-state">
+                            <p className="upload-note">
                                 Direct upload is on hold. Using a standard placeholder image by default.
                             </p>
                             {formData.image_url && (
@@ -133,28 +151,45 @@ function AdminDashboard() {
                             )}
                         </div>
 
-                        <input
-                            placeholder="Optional: paste custom Image URL"
-                            value={formData.image_url}
-                            onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                        />
-                        <input
-                            placeholder="Live URL"
-                            value={formData.live_url}
-                            onChange={(e) => setFormData({ ...formData, live_url: e.target.value })}
-                        />
-                        <input
-                            placeholder="Tech stack (comma-separated, e.g. React, Node.js, Firebase)"
-                            value={formData.techInput}
-                            onChange={(e) => setFormData({ ...formData, techInput: e.target.value })}
-                        />
-                        <select
-                            value={formData.category}
-                            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                        >
-                            <option value="web">Web Development</option>
-                            <option value="marketing">Marketing</option>
-                        </select>
+                        <div className="field-group">
+                            <label htmlFor="project-image-url">Image URL</label>
+                            <input
+                                id="project-image-url"
+                                placeholder="Optional: paste custom image URL"
+                                value={formData.image_url}
+                                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                            />
+                        </div>
+                        <div className="field-group">
+                            <label htmlFor="project-live-url">Live URL</label>
+                            <input
+                                id="project-live-url"
+                                type="url"
+                                placeholder="https://example.com"
+                                value={formData.live_url}
+                                onChange={(e) => setFormData({ ...formData, live_url: e.target.value })}
+                            />
+                        </div>
+                        <div className="field-group">
+                            <label htmlFor="project-tech">Tech Stack</label>
+                            <input
+                                id="project-tech"
+                                placeholder="React, Node.js, Firebase"
+                                value={formData.techInput}
+                                onChange={(e) => setFormData({ ...formData, techInput: e.target.value })}
+                            />
+                        </div>
+                        <div className="field-group">
+                            <label htmlFor="project-category">Category</label>
+                            <select
+                                id="project-category"
+                                value={formData.category}
+                                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                            >
+                                <option value="web">Web Development</option>
+                                <option value="marketing">Marketing</option>
+                            </select>
+                        </div>
                         <div className="form-actions">
                             <button type="submit" className="admin-btn">
                                 {editingProject ? 'Save Changes' : 'Add Project'}
@@ -169,20 +204,25 @@ function AdminDashboard() {
                 </div>
 
                 <div className="project-list">
-                    <h3>Your Projects ({projects.length})</h3>
-                    {projects.length === 0 && <p className="empty-state">No projects yet. Add one!</p>}
-                    {projects.map((p) => (
-                        <div key={p.id} className={`project-row ${editingProject?.id === p.id ? 'editing' : ''}`}>
-                            <div className="project-info">
-                                <span className="project-title">{p.title}</span>
-                                <span className="project-category">{p.category}</span>
+                    <div className="project-list-header">
+                        <h3>Your Projects ({projects.length})</h3>
+                        <p>Select one to edit or remove.</p>
+                    </div>
+                    <div className="project-list-scroll">
+                        {projects.length === 0 && <p className="empty-state">No projects yet. Add one!</p>}
+                        {projects.map((p) => (
+                            <div key={p.id} className={`project-row ${editingProject?.id === p.id ? 'editing' : ''}`}>
+                                <div className="project-info">
+                                    <span className="project-title">{p.title}</span>
+                                    <span className="project-category">{p.category}</span>
+                                </div>
+                                <div className="project-actions">
+                                    <button type="button" onClick={() => handleEdit(p)} className="edit-btn">Edit</button>
+                                    <button type="button" onClick={() => handleDelete(p.id)} className="delete-btn">Delete</button>
+                                </div>
                             </div>
-                            <div className="project-actions">
-                                <button onClick={() => handleEdit(p)} className="edit-btn">Edit</button>
-                                <button onClick={() => handleDelete(p.id)} className="delete-btn">Delete</button>
-                            </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
