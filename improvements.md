@@ -42,7 +42,7 @@ Transform the static React portfolio into a dynamic, professional-grade applicat
 | **Firebase Phase 5 Cutover** (#77) | Frontend runtime fully Firebase-native (Firestore/Auth only). Legacy API fallbacks removed from `projectsService` and `authService`; Docker stack simplified to frontend+tunnel. |
 | **Resume Link / Resume Refresh** (#48) | Updated `src/assets/documents/aaron-adams-resume.pdf` from latest resume source and split About CTA into explicit `View Resume` (new tab) + `Download Resume` (download attribute). Verified in browser. |
 | **Cloudflare Tunnel** (#16) | Closed as not applicable for the Firebase Hosting architecture (`https://pwv2-e495e.web.app` is public by default). |
-| **Admin Portfolio Ordering / Project Metadata** (#80) | Added `project_type` (`client` / `personal`) and `sort_order` to the Firestore project model, updated the admin portal with reorder controls and project-type editing, and switched portfolio ordering off `created_at` alone. Follow-up fix corrected null `sort_order` normalization and added defensive sorting in the public/admin fetch paths. Verified with `npm run build`, `npm test -- --watchAll=false`, and Playwright against `http://localhost:4173` for public portfolio ordering plus admin login rendering. Protected dashboard drag/drop still requires the live Firebase admin password for a full browser-authenticated check. |
+| **Admin Portfolio Ordering / Project Metadata** (#80) | Added `project_type` (`client` / `personal`) and `sort_order` to the Firestore project model, updated the admin portal with reorder controls and project-type editing, and switched portfolio ordering off `created_at` alone. Follow-up fixes corrected null `sort_order` normalization, added defensive sorting in the public/admin fetch paths, and constrained admin reordering to stay within each project type so the saved order matches the UI contract. Verified with `npm run build`, `npm test -- --watchAll=false`, and Playwright against `http://localhost:4173` for public portfolio ordering plus admin login rendering. Protected dashboard drag/drop still requires the live Firebase admin password for a full browser-authenticated check. |
 
 ### 🔄 IN PROGRESS
 | Item | Description |
@@ -268,13 +268,3 @@ npm start
 | Legacy backend DB startup behavior | [#70](https://github.com/aaronadams62/pw2/issues/70) | Superseded by Firebase runtime cutover in #77 | Closed as superseded |
 | Legacy upload URL behavior | [#71](https://github.com/aaronadams62/pw2/issues/71) | Superseded by Firebase runtime cutover in #77 and placeholder mode for #74 | Closed as superseded |
 | Backup strategy transition | [#56](https://github.com/aaronadams62/pw2/issues/56) | Re-scope from Postgres to Firestore/Storage during migration | Close after Firebase backup/export plan is documented and tested |
-
-
-
-
-
-
-
-
-
-

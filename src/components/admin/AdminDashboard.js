@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './admin.css';
 import {
@@ -23,6 +23,8 @@ const EMPTY_FORM = {
     techInput: '',
 };
 
+const getProjectType = (project) => (project?.project_type === 'client' ? 'client' : 'personal');
+
 const reorderProjects = (items, fromId, toId) => {
     const fromIndex = items.findIndex((item) => item.id === fromId);
     const toIndex = items.findIndex((item) => item.id === toId);
@@ -31,10 +33,33 @@ const reorderProjects = (items, fromId, toId) => {
         return items;
     }
 
+    if (getProjectType(items[fromIndex]) !== getProjectType(items[toIndex])) {
+        return items;
+    }
+
     const nextItems = [...items];
     const [movedItem] = nextItems.splice(fromIndex, 1);
     nextItems.splice(toIndex, 0, movedItem);
     return nextItems;
+};
+
+const getAdjacentProjectIndex = (items, projectId, direction) => {
+    const currentIndex = items.findIndex((item) => item.id === projectId);
+
+    if (currentIndex < 0) {
+        return -1;
+    }
+
+    const currentType = getProjectType(items[currentIndex]);
+    const step = direction === 'up' ? -1 : 1;
+
+    for (let index = currentIndex + step; index >= 0 && index < items.length; index += step) {
+        if (getProjectType(items[index]) === currentType) {
+            return index;
+        }
+    }
+
+    return -1;
 };
 
 function AdminDashboard() {
@@ -46,6 +71,7 @@ function AdminDashboard() {
     const [saveMessage, setSaveMessage] = useState('');
     const [saveError, setSaveError] = useState('');
     const [isSavingOrder, setIsSavingOrder] = useState(false);
+    const dragDidReorderRef = useRef(false);
     const { authEnabled, authReady, user } = useAuth();
     const navigate = useNavigate();
 
@@ -148,7 +174,7 @@ function AdminDashboard() {
 
     const handleMoveProject = (projectId, direction) => {
         const currentIndex = projects.findIndex((project) => project.id === projectId);
-        const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+        const targetIndex = getAdjacentProjectIndex(projects, projectId, direction);
 
         if (currentIndex < 0 || targetIndex < 0 || targetIndex >= projects.length) {
             return;
@@ -163,6 +189,7 @@ function AdminDashboard() {
     };
 
     const handleDragStart = (projectId) => {
+        dragDidReorderRef.current = false;
         setDraggedProjectId(projectId);
         clearFeedback();
     };
@@ -174,13 +201,23 @@ function AdminDashboard() {
             return;
         }
 
-        setProjects((currentProjects) => reorderProjects(currentProjects, draggedProjectId, projectId));
+        setProjects((currentProjects) => {
+            const reorderedProjects = reorderProjects(currentProjects, draggedProjectId, projectId);
+
+            if (reorderedProjects !== currentProjects) {
+                dragDidReorderRef.current = true;
+            }
+
+            return reorderedProjects;
+        });
     };
 
     const handleDragEnd = () => {
-        if (draggedProjectId) {
+        if (dragDidReorderRef.current) {
             setIsOrderDirty(true);
         }
+
+        dragDidReorderRef.current = false;
         setDraggedProjectId(null);
     };
 
@@ -354,7 +391,7 @@ function AdminDashboard() {
                     <div className="project-list-header">
                         <div>
                             <h3>Your Projects ({projects.length})</h3>
-                            <p>Drag to reorder. Client work always renders above personal projects.</p>
+                            <p>Drag to reorder within each project type. Client work always renders above personal projects.</p>
                         </div>
                         <button
                             type="button"
@@ -397,7 +434,7 @@ function AdminDashboard() {
                                         type="button"
                                         className="reorder-btn"
                                         onClick={() => handleMoveProject(p.id, 'up')}
-                                        disabled={index === 0}
+                                        disabled={getAdjacentProjectIndex(projects, p.id, 'up') === -1}
                                     >
                                         Up
                                     </button>
@@ -405,7 +442,7 @@ function AdminDashboard() {
                                         type="button"
                                         className="reorder-btn"
                                         onClick={() => handleMoveProject(p.id, 'down')}
-                                        disabled={index === projects.length - 1}
+                                        disabled={getAdjacentProjectIndex(projects, p.id, 'down') === -1}
                                     >
                                         Down
                                     </button>
@@ -422,6 +459,3 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard;
-
-
-
