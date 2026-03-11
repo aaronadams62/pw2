@@ -136,7 +136,13 @@ const projects = [
 const ref = db.collection('projects');
 let count = 0;
 for (const p of projects) {
-  await ref.add({ ...p, created_at: FieldValue.serverTimestamp(), updated_at: FieldValue.serverTimestamp() });
+  await ref.add({
+    ...p,
+    project_type: p.project_type || 'personal',
+    sort_order: count,
+    created_at: FieldValue.serverTimestamp(),
+    updated_at: FieldValue.serverTimestamp(),
+  });
   count++;
   console.log(`  [${count}/${projects.length}] Added: ${p.title}`);
 }

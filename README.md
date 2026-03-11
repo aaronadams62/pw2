@@ -55,6 +55,12 @@ npm run firebase:serve:hosting
 Phase 2 (Firestore project CRUD) and Phase 4 (Firebase Auth admin login/session) are implemented.
 Phase 5 cutover is complete: runtime app flows no longer depend on Express/PostgreSQL endpoints.
 
+Portfolio project documents now support:
+
+- `category` for content classification such as `web` or `marketing`
+- `project_type` for top-level grouping in the portfolio (`client` or `personal`)
+- `sort_order` for explicit manual ordering from the admin portal
+
 Phase 3 and 4 prerequisites in Firebase Console:
 
 1. Enable Firebase Storage:

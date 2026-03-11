@@ -246,6 +246,12 @@
     gap: 1rem;
 }
 
+.project-list-header > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
 .project-list-header h3 {
     color: var(--admin-text-main);
     margin-bottom: 0;
@@ -281,6 +287,11 @@
 .project-row:hover {
     transform: translateX(4px);
     border-color: rgba(56, 189, 248, 0.3);
+}
+
+.project-row.dragging {
+    opacity: 0.72;
+    border-color: var(--admin-accent);
 }
 
 .delete-btn {
@@ -353,12 +364,34 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    min-width: 0;
+}
+
+.project-row-topline {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.project-order {
+    width: 2rem;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.12);
+    color: var(--admin-accent);
+    font-size: 0.82rem;
+    font-weight: 700;
+    flex-shrink: 0;
 }
 
 .project-title {
     font-weight: 600;
     color: var(--admin-text-main);
     font-size: 1.05rem;
+    line-height: 1.35;
 }
 
 .project-category {
@@ -368,14 +401,76 @@
     letter-spacing: 0.08em;
 }
 
+.project-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.project-type-chip,
+.project-live-chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.2rem 0.55rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.project-type-chip--client {
+    background: rgba(34, 197, 94, 0.12);
+    color: #86efac;
+}
+
+.project-type-chip--personal {
+    background: rgba(148, 163, 184, 0.12);
+    color: #cbd5e1;
+}
+
+.project-live-chip {
+    background: rgba(250, 204, 21, 0.12);
+    color: #fde68a;
+}
+
 .project-actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
 }
 
 .project-row.editing {
     border-color: var(--admin-accent);
     background: rgba(56, 189, 248, 0.05);
+}
+
+.save-order-btn,
+.reorder-btn {
+    background: rgba(56, 189, 248, 0.1);
+    color: var(--admin-accent);
+    border: 1px solid transparent;
+    padding: 0.5rem 0.9rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.save-order-btn:hover,
+.reorder-btn:hover {
+    background: var(--admin-accent);
+    color: white;
+}
+
+.save-order-btn:disabled,
+.reorder-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background: rgba(148, 163, 184, 0.12);
+    color: var(--admin-text-muted);
 }
 
 .empty-state {
@@ -526,6 +621,8 @@
         width: 100%;
     }
 
+    .save-order-btn,
+    .reorder-btn,
     .edit-btn,
     .delete-btn {
         width: 100%;

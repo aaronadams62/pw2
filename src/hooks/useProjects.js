@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getProjects } from '../services/projectsService';
+import { getProjects, sortProjects } from '../services/projectsService';
 
 export function useProjects() {
   const [projects, setProjects] = useState([]);
@@ -10,7 +10,7 @@ export function useProjects() {
     try {
       setLoading(true);
       setError(null);
-      setProjects(await getProjects());
+      setProjects(sortProjects(await getProjects()));
     } catch (err) {
       console.error('Failed to fetch projects:', err);
       setError('Could not load projects. Ensure Firebase is configured.');
@@ -30,3 +30,4 @@ export function useProjects() {
     refreshProjects,
   };
 }
+

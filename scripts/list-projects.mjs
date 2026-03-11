@@ -43,6 +43,8 @@ if (snap.empty) {
     console.log(`  live_url:    ${d.live_url}`);
     console.log(`  image_url:   ${d.image_url}`);
     console.log(`  category:    ${d.category}`);
+    console.log(`  project_type:${d.project_type ?? 'personal'}`);
+    console.log(`  sort_order:  ${d.sort_order ?? '(unset)'}`);
     console.log(`  tech:        ${JSON.stringify(d.tech ?? [])}`);
     console.log('');
   });
